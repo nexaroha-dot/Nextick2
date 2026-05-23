@@ -496,120 +496,157 @@ function QuestionnaireBuilder() {
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-2.5 space-y-4">
+        <div className="flex-1 overflow-y-auto p-3 space-y-3">
           
-          {/* SCHEDULE MODULE */}
-          <div className="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-xl border border-slate-200 dark:border-slate-700 space-y-4">
-            <div className="flex items-center gap-1.5 text-slate-800 dark:text-slate-200 font-bold text-[12px] tracking-tight">
-              <Calendar className="w-4 h-4 text-blue-500" /> Global Schedule Rules
-            </div>
-            
-            {/* Daily Rules */}
-            <div className="space-y-1">
-              <div className="text-[11px] font-bold text-slate-700 dark:text-slate-300">Daily Exceptions</div>
-              <p className="text-[9px] text-slate-400 mb-1 leading-tight">Select days to skip</p>
-              <div className="flex flex-wrap gap-1">
-                {DAYS.map(day => (
-                  <button 
-                    key={day}
-                    onClick={() => setScheduleExceptions(prev => prev.includes(day) ? prev.filter(d => d !== day) : [...prev, day])}
-                    className={`px-1.5 py-1 text-[9px] font-bold rounded-md border transition-all ${scheduleExceptions.includes(day) ? 'bg-red-50 border-red-200 text-red-600 dark:bg-red-900/20 dark:border-red-800' : 'bg-white border-slate-200 text-slate-500 hover:bg-slate-50 dark:bg-slate-800 dark:border-slate-700'}`}
-                  >
-                    {day.substring(0,3)}
-                  </button>
-                ))}
-              </div>
+          {/* SCHEDULE MODULE — Accordion style */}
+          <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 overflow-hidden shadow-sm">
+            {/* Header */}
+            <div className="bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 px-3 py-2.5 flex items-center gap-2">
+              <Calendar className="w-4 h-4 text-blue-500" />
+              <span className="text-[12px] font-bold text-slate-700 dark:text-slate-200">This Ticksheet Schedules</span>
             </div>
 
-            {/* Weekly Rules */}
-            <div className="space-y-1.5 pt-2 border-t border-slate-200/50 dark:border-slate-700/50">
-              <div className="text-[11px] font-bold text-slate-700 dark:text-slate-300">Weekly — Occurrence Days</div>
-              <div className="flex flex-wrap gap-1">
-                {DAYS.map(day => (
-                  <button 
-                    key={day}
-                    onClick={() => setScheduleOccurrences(prev => prev.includes(day) ? prev.filter(d => d !== day) : [...prev, day])}
-                    className={`px-1.5 py-1 text-[9px] font-bold rounded-md border transition-all ${scheduleOccurrences.includes(day) ? 'bg-blue-50 border-blue-200 text-blue-600 dark:bg-blue-900/30 dark:border-blue-800' : 'bg-white border-slate-200 text-slate-500 hover:bg-slate-50 dark:bg-slate-800 dark:border-slate-700'}`}
-                  >
-                    {day.substring(0,3)}
-                  </button>
-                ))}
-              </div>
-            </div>
+            <div className="divide-y divide-slate-100 dark:divide-slate-700/50">
 
-            {/* Monthly Rules */}
-            <div className="space-y-1.5 pt-2 border-t border-slate-200/50 dark:border-slate-700/50">
-              <div className="text-[11px] font-bold text-slate-700 dark:text-slate-300">Monthly Rule</div>
-              <select 
-                className="w-full p-1.5 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-md text-[11px] text-slate-700 font-medium focus:outline-none"
-                value={scheduleMonthlyType}
-                onChange={(e) => setScheduleMonthlyType(e.target.value)}
-              >
-                <option value="Date">On Date(s)</option>
-                <option value="Interval">Every X Days</option>
-              </select>
-
-              {scheduleMonthlyType === 'Date' && (
-                <div>
-                  <p className="text-[9px] text-slate-400 mb-1">Click to select dates (multiple allowed)</p>
-                  <div className="grid grid-cols-7 gap-1">
-                    {Array.from({length: 31}, (_, i) => i+1).map(d => (
-                      <button key={d} onClick={() => toggleMonthlyDate(d)}
-                        className={`py-1 text-[9px] font-bold rounded border transition-all ${scheduleMonthlyDates.includes(d) ? 'bg-blue-500 border-blue-500 text-white' : 'bg-white border-slate-200 text-slate-500 hover:bg-slate-50 dark:bg-slate-800 dark:border-slate-700'}`}
-                      >{d}</button>
+              {/* DAILY */}
+              <details className="group" open>
+                <summary className="flex items-center gap-2 p-3 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors list-none">
+                  <span className="w-1.5 h-1.5 rounded-full bg-red-400 inline-block"></span>
+                  <span className="text-[11px] font-bold text-slate-700 dark:text-slate-300">Daily Exceptions</span>
+                  <span className="ml-auto text-[9px] font-bold text-slate-400 group-open:hidden">{scheduleExceptions.length} skip days</span>
+                  <ChevronDown className="w-3.5 h-3.5 text-slate-400 ml-1 group-open:-rotate-180 transition-transform" />
+                </summary>
+                <div className="px-3 pb-3 pt-0">
+                  <div className="flex flex-wrap gap-1">
+                    {DAYS.map(day => (
+                      <button
+                        key={day}
+                        onClick={() => setScheduleExceptions(prev => prev.includes(day) ? prev.filter(d => d !== day) : [...prev, day])}
+                        className={`px-2 py-1 text-[10px] font-bold rounded-md border transition-all ${
+                          scheduleExceptions.includes(day)
+                            ? 'bg-red-500 border-red-500 text-white shadow-sm'
+                            : 'bg-white border-slate-200 text-slate-500 hover:border-red-300 hover:text-red-500 dark:bg-slate-800 dark:border-slate-600'
+                        }`}
+                      >
+                        {day.substring(0, 3)}
+                      </button>
                     ))}
                   </div>
                 </div>
-              )}
+              </details>
 
-              {scheduleMonthlyType === 'Interval' && (
-                <div className="space-y-1.5">
-                  {scheduleMonthlyIntervals.map((val, i) => (
-                    <div key={i} className="flex items-center gap-1.5">
-                      <span className="text-[9px] text-slate-400 shrink-0">Every</span>
-                      <input type="number" min="1" max="365"
-                        className="w-12 p-1 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 rounded text-[10px] text-slate-700 font-medium focus:outline-none"
-                        value={val}
-                        onChange={(e) => updateMonthlyInterval(i, Number(e.target.value))}
-                      />
-                      <span className="text-[9px] text-slate-400 flex-1">days</span>
-                      {scheduleMonthlyIntervals.length > 1 && (
-                        <button onClick={() => removeMonthlyInterval(i)} className="text-red-400 hover:text-red-600 text-[10px] font-bold">✕</button>
-                      )}
-                    </div>
-                  ))}
-                  <button onClick={addMonthlyInterval} className="text-[10px] font-bold text-blue-500 hover:text-blue-700 flex items-center gap-1">
-                    <Plus className="w-3 h-3" /> Add Interval
-                  </button>
+              {/* WEEKLY */}
+              <details className="group">
+                <summary className="flex items-center gap-2 p-3 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors list-none">
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-400 inline-block"></span>
+                  <span className="text-[11px] font-bold text-slate-700 dark:text-slate-300">Weekly Occurrences</span>
+                  <span className="ml-auto text-[9px] font-bold text-slate-400 group-open:hidden">{scheduleOccurrences.length} days active</span>
+                  <ChevronDown className="w-3.5 h-3.5 text-slate-400 ml-1 group-open:-rotate-180 transition-transform" />
+                </summary>
+                <div className="px-3 pb-3 pt-0">
+                  <div className="flex flex-wrap gap-1">
+                    {DAYS.map(day => (
+                      <button
+                        key={day}
+                        onClick={() => setScheduleOccurrences(prev => prev.includes(day) ? prev.filter(d => d !== day) : [...prev, day])}
+                        className={`px-2 py-1 text-[10px] font-bold rounded-md border transition-all ${
+                          scheduleOccurrences.includes(day)
+                            ? 'bg-blue-500 border-blue-500 text-white shadow-sm'
+                            : 'bg-white border-slate-200 text-slate-500 hover:border-blue-300 hover:text-blue-500 dark:bg-slate-800 dark:border-slate-600'
+                        }`}
+                      >
+                        {day.substring(0, 3)}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              )}
+              </details>
+
+              {/* MONTHLY */}
+              <details className="group">
+                <summary className="flex items-center gap-2 p-3 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors list-none">
+                  <span className="w-1.5 h-1.5 rounded-full bg-purple-400 inline-block"></span>
+                  <span className="text-[11px] font-bold text-slate-700 dark:text-slate-300">Monthly Rule</span>
+                  <span className="ml-auto text-[9px] font-bold text-slate-400 group-open:hidden">{scheduleMonthlyType}</span>
+                  <ChevronDown className="w-3.5 h-3.5 text-slate-400 ml-1 group-open:-rotate-180 transition-transform" />
+                </summary>
+                <div className="px-3 pb-3 pt-0 space-y-2">
+                  <select
+                    className="w-full p-1.5 border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 rounded-lg text-[11px] text-slate-700 dark:text-slate-300 font-medium focus:outline-none focus:border-blue-400"
+                    value={scheduleMonthlyType}
+                    onChange={(e) => setScheduleMonthlyType(e.target.value)}
+                  >
+                    <option value="Date">On Date(s)</option>
+                    <option value="Interval">Every X Days</option>
+                  </select>
+
+                  {scheduleMonthlyType === 'Date' && (
+                    <div className="grid grid-cols-7 gap-0.5 pt-1">
+                      {Array.from({ length: 31 }, (_, i) => i + 1).map(d => (
+                        <button key={d} onClick={() => toggleMonthlyDate(d)}
+                          className={`py-1 text-[9px] font-bold rounded border transition-all ${
+                            scheduleMonthlyDates.includes(d)
+                              ? 'bg-blue-500 border-blue-500 text-white'
+                              : 'bg-white border-slate-200 text-slate-400 hover:bg-blue-50 hover:border-blue-300 dark:bg-slate-800 dark:border-slate-600 dark:text-slate-400'
+                          }`}
+                        >{d}</button>
+                      ))}
+                    </div>
+                  )}
+
+                  {scheduleMonthlyType === 'Interval' && (
+                    <div className="space-y-1.5 pt-1">
+                      {scheduleMonthlyIntervals.map((val, i) => (
+                        <div key={i} className="flex items-center gap-2 bg-slate-50 dark:bg-slate-800/80 border border-slate-100 dark:border-slate-700 rounded-lg p-1.5">
+                          <span className="text-[10px] font-medium text-slate-400 shrink-0">Every</span>
+                          <input type="number" min="1" max="365"
+                            className="w-12 p-1 border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-900 rounded text-[11px] text-slate-700 dark:text-slate-300 font-bold text-center focus:outline-none focus:border-blue-400"
+                            value={val}
+                            onChange={(e) => updateMonthlyInterval(i, Number(e.target.value))}
+                          />
+                          <span className="text-[10px] font-medium text-slate-400 flex-1">days</span>
+                          {scheduleMonthlyIntervals.length > 1 && (
+                            <button onClick={() => removeMonthlyInterval(i)} className="w-5 h-5 flex items-center justify-center text-red-400 hover:text-red-600 hover:bg-red-50 rounded transition-all text-[10px] font-bold">✕</button>
+                          )}
+                        </div>
+                      ))}
+                      <button onClick={addMonthlyInterval} className="w-full py-1.5 text-[10px] font-bold text-blue-500 hover:text-blue-700 hover:bg-blue-50 rounded-lg border border-dashed border-blue-200 transition-all flex items-center justify-center gap-1">
+                        <Plus className="w-3 h-3" /> Add Interval
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </details>
             </div>
 
-            <button onClick={saveAsDefault} className="w-full text-center text-[10px] font-bold text-slate-400 hover:text-blue-600 transition-colors pt-3 border-t border-slate-200/50 dark:border-slate-700/50">
-              Save as Global Default
+            {/* Save Default Footer */}
+            <button onClick={saveAsDefault} className="w-full py-2.5 bg-slate-50 dark:bg-slate-800 hover:bg-blue-50 dark:hover:bg-blue-900/20 text-[10px] font-bold text-blue-600 transition-all border-t border-slate-200 dark:border-slate-700 flex items-center justify-center gap-1.5">
+              <Save className="w-3.5 h-3.5" /> Save as Default For this ticksheet
             </button>
           </div>
 
-          <div>
-            <div className="flex items-center gap-1.5 text-slate-600 dark:text-slate-400 font-bold text-[11px] uppercase tracking-wider mb-2 px-1">
-              <Layers className="w-3.5 h-3.5 text-purple-500" /> Form Fields
+          {/* FORM FIELDS */}
+          <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 overflow-hidden shadow-sm">
+            <div className="bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 px-3 py-2.5 flex items-center gap-2">
+              <Layers className="w-4 h-4 text-purple-500" />
+              <span className="text-[12px] font-bold text-slate-700 dark:text-slate-200">Form Fields</span>
+              <span className="ml-auto text-[9px] font-medium text-slate-400">Drag to canvas</span>
             </div>
-            <div className="space-y-1.5">
+            <div className="p-2 grid grid-cols-2 gap-1.5">
               {FIELD_TYPES.map(item => (
                 <div
                   key={item.id}
                   draggable
                   onDragStart={e => onDragStart(e, item.id, item.label)}
-                  className="px-2.5 py-2 bg-white dark:bg-slate-800 border border-slate-200/50 dark:border-slate-700 rounded-lg flex items-center gap-2.5 cursor-grab hover:border-blue-600 hover:text-blue-600 dark:text-slate-300 transition-all hover:shadow-sm group"
+                  className="flex items-center gap-2 px-2.5 py-2 bg-slate-50 dark:bg-slate-700 border border-slate-200/50 dark:border-slate-600 rounded-lg cursor-grab hover:bg-blue-50 hover:border-blue-300 hover:text-blue-600 dark:hover:bg-blue-900/20 dark:hover:border-blue-700 transition-all group active:scale-95"
                 >
-                  <div className="w-6 h-6 rounded-md bg-slate-50 dark:bg-slate-700 border border-slate-100 dark:border-slate-600 flex items-center justify-center group-hover:bg-blue-50 dark:group-hover:bg-blue-900 group-hover:border-blue-100 dark:group-hover:border-blue-800 transition-colors shrink-0">
-                    <item.icon className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400 group-hover:text-blue-600 transition-colors" />
-                  </div>
-                  <span className="text-[12px] font-semibold text-slate-600 dark:text-slate-300 group-hover:text-blue-600 transition-colors">{item.label}</span>
+                  <item.icon className="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-500 transition-colors shrink-0" />
+                  <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-300 group-hover:text-blue-600 transition-colors leading-tight">{item.label}</span>
                 </div>
               ))}
             </div>
           </div>
+
         </div>
       </aside>
 
