@@ -118,17 +118,17 @@ export default function CreateHubPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {questionnaires.map((q: any) => (
-              <div key={q._id} className="glass-panel border border-slate-200/50 dark:border-slate-700/50 rounded-2xl p-6 hover:border-blue-500/50 hover:shadow-xl transition-all duration-300 group flex flex-col relative cursor-pointer overflow-hidden">
+              <div key={q._id} className="glass-panel border border-slate-200/50 dark:border-slate-700/50 rounded-2xl p-4 md:p-5 hover:border-blue-500/50 hover:shadow-xl transition-all duration-300 group flex flex-col relative cursor-pointer overflow-hidden">
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-400 to-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 
-                <div className="flex justify-between items-start mb-6">
-                  <div className="bg-blue-50 dark:bg-blue-900/30 p-3 rounded-xl group-hover:scale-110 transition-transform">
-                    <FileText className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                <div className="flex justify-between items-start mb-5 md:mb-6">
+                  <div className="bg-blue-50 dark:bg-blue-900/30 p-2.5 md:p-3 rounded-xl group-hover:scale-110 transition-transform">
+                    <FileText className="w-4 h-4 md:w-5 md:h-5 text-blue-600 dark:text-blue-400" />
                   </div>
                   <div className="relative">
                     <button 
                       onClick={(e) => { e.stopPropagation(); setOpenMenuId(openMenuId === q._id ? null : q._id); }}
-                      className="text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-700 dark:hover:text-slate-300 p-1.5 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
+                      className="text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-700 dark:hover:text-slate-300 p-2 md:p-1.5 rounded-lg transition-colors opacity-100 md:opacity-0 md:group-hover:opacity-100"
                     >
                       <MoreVertical className="w-4 h-4" />
                     </button>

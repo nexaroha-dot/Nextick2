@@ -77,7 +77,7 @@ export default function SettingsPage() {
               <div className="bg-purple-100 dark:bg-purple-900/30 p-2 rounded-lg text-purple-600 dark:text-purple-400">
                 <FileText className="w-5 h-5" />
               </div>
-              <h2 className="text-lg font-bold text-slate-800 dark:text-slate-200">Form Preferences</h2>
+              <h2 className="text-lg font-bold text-slate-800 dark:text-slate-200">Ticksheet Preferences</h2>
             </div>
             
             <div className="space-y-4">

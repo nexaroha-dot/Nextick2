@@ -116,7 +116,7 @@ export default function TickSheetFillPage() {
       <div className="max-w-3xl mx-auto p-4 sm:p-6 md:p-10 pb-32 pt-6 md:pt-10">
         <div className="mb-6 md:mb-8 relative z-10">
           <Link href="/tick-sheet" className="inline-flex items-center gap-2 text-xs md:text-sm font-bold text-slate-500 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400 transition-colors mb-4 md:mb-4">
-            <ArrowLeft className="w-4 h-4" /> Back to Ticksheets
+            <ArrowLeft className="w-4 h-4" /> <span className="hidden md:inline">Back to Ticksheets</span>
           </Link>
           <h1 className="text-2xl md:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">Daily Machine Checklist</h1>
           <p className="text-sm text-slate-500 dark:text-slate-400 mt-1.5 md:mt-2 font-medium">Please answer all the required questions below.</p>
@@ -129,14 +129,14 @@ export default function TickSheetFillPage() {
               placeholder="Search questions..." 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl pl-10 pr-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-slate-700 dark:text-slate-200 shadow-sm"
+              className="w-full bg-white/90 backdrop-blur-md dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 rounded-xl pl-10 pr-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-slate-700 dark:text-slate-200 shadow-sm"
             />
           </div>
         </div>
 
-        <div className="space-y-5 md:space-y-6 relative z-10">
+        <div className="space-y-4 md:space-y-6 relative z-10">
           {filteredQuestions.length === 0 ? (
-            <div className="text-center py-12 bg-white dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-700">
+            <div className="text-center py-12 bg-white/90 backdrop-blur-md dark:bg-slate-800/80 rounded-2xl border border-slate-200 dark:border-slate-700">
               <p className="text-slate-500 dark:text-slate-400 font-medium">No questions found matching your search.</p>
             </div>
           ) : (
@@ -144,7 +144,7 @@ export default function TickSheetFillPage() {
               <div 
                 key={q.id} 
                 id={`question-${q.id}`}
-                className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-5 md:p-6 shadow-sm transition-all duration-500 relative overflow-hidden"
+                className="bg-white/95 backdrop-blur-xl dark:bg-slate-800/95 border border-slate-200 dark:border-slate-700/50 rounded-2xl p-4 md:p-6 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)] dark:shadow-[0_2px_12px_-4px_rgba(0,0,0,0.2)] transition-all duration-500 relative overflow-hidden"
               >
                 {/* Green left border indicator if answered */}
                 <div className={`absolute left-0 top-0 bottom-0 w-1.5 transition-colors duration-300 ${isAnswered(q.id) ? 'bg-green-500' : 'bg-transparent'}`}></div>
@@ -187,7 +187,7 @@ export default function TickSheetFillPage() {
                       type="text" 
                       value={answers[q.id] || ''}
                       onChange={(e) => handleAnswerChange(q.id, e.target.value)}
-                      className="w-full border border-slate-200 dark:border-slate-600 rounded-xl p-3.5 md:p-3 bg-slate-50 dark:bg-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-sm md:text-base font-medium text-slate-700 dark:text-slate-200"
+                      className="w-full border border-slate-200 dark:border-slate-600 rounded-xl p-3.5 md:p-3 bg-slate-50/80 dark:bg-slate-900/80 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-sm md:text-base font-medium text-slate-700 dark:text-slate-200"
                       placeholder="Type your answer here..."
                     />
                   )}
@@ -196,7 +196,7 @@ export default function TickSheetFillPage() {
                     <textarea 
                       value={answers[q.id] || ''}
                       onChange={(e) => handleAnswerChange(q.id, e.target.value)}
-                      className="w-full border border-slate-200 dark:border-slate-600 rounded-xl p-3.5 md:p-3 bg-slate-50 dark:bg-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-sm md:text-base font-medium text-slate-700 dark:text-slate-200 min-h-[120px] md:min-h-[100px] resize-y"
+                      className="w-full border border-slate-200 dark:border-slate-600 rounded-xl p-3.5 md:p-3 bg-slate-50/80 dark:bg-slate-900/80 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-sm md:text-base font-medium text-slate-700 dark:text-slate-200 min-h-[120px] md:min-h-[100px] resize-y"
                       placeholder="Type your detailed answer here..."
                     />
                   )}
@@ -206,7 +206,7 @@ export default function TickSheetFillPage() {
                       type="number" 
                       value={answers[q.id] || ''}
                       onChange={(e) => handleAnswerChange(q.id, e.target.value)}
-                      className="w-full md:max-w-xs border border-slate-200 dark:border-slate-600 rounded-xl p-3.5 md:p-3 bg-slate-50 dark:bg-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-sm md:text-base font-bold text-slate-700 dark:text-slate-200"
+                      className="w-full md:max-w-xs border border-slate-200 dark:border-slate-600 rounded-xl p-3.5 md:p-3 bg-slate-50/80 dark:bg-slate-900/80 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-sm md:text-base font-bold text-slate-700 dark:text-slate-200"
                       placeholder="e.g. 42"
                     />
                   )}
@@ -216,7 +216,7 @@ export default function TickSheetFillPage() {
                       <select 
                         value={answers[q.id] || ''}
                         onChange={(e) => handleAnswerChange(q.id, e.target.value)}
-                        className="w-full border border-slate-200 dark:border-slate-600 rounded-xl p-3.5 md:p-3 pr-10 bg-slate-50 dark:bg-slate-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-sm md:text-base font-medium text-slate-700 dark:text-slate-200 appearance-none cursor-pointer"
+                        className="w-full border border-slate-200 dark:border-slate-600 rounded-xl p-3.5 md:p-3 pr-10 bg-slate-50/80 dark:bg-slate-900/80 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-sm md:text-base font-medium text-slate-700 dark:text-slate-200 appearance-none cursor-pointer"
                       >
                         <option value="" disabled>Select an option...</option>
                         {q.options?.map(opt => (
@@ -228,11 +228,11 @@ export default function TickSheetFillPage() {
                   )}
 
                   {q.type === 'Multiple Option' && (
-                    <div className="space-y-3">
+                    <div className="space-y-2.5 md:space-y-3">
                       {q.options?.map(opt => {
                         const isChecked = (answers[q.id] || []).includes(opt);
                         return (
-                          <label key={opt} className={`flex items-start md:items-center gap-3.5 p-3.5 md:p-3 rounded-xl border transition-all cursor-pointer ${isChecked ? 'bg-blue-50 border-blue-500 dark:bg-blue-900/20 dark:border-blue-500' : 'bg-slate-50 border-slate-200 hover:border-blue-300 dark:bg-slate-900 dark:border-slate-700 dark:hover:border-slate-500'}`}>
+                          <label key={opt} className={`flex items-start md:items-center gap-3.5 p-3.5 md:p-3 rounded-xl border transition-all cursor-pointer ${isChecked ? 'bg-blue-50/80 border-blue-500 dark:bg-blue-900/30 dark:border-blue-500' : 'bg-slate-50/80 border-slate-200 hover:border-blue-300 dark:bg-slate-900/80 dark:border-slate-700 dark:hover:border-slate-500'}`}>
                             <div className={`w-5 h-5 mt-0.5 md:mt-0 rounded flex items-center justify-center border shrink-0 transition-colors ${isChecked ? 'bg-blue-600 border-blue-600 text-white' : 'border-slate-300 bg-white dark:border-slate-600 dark:bg-slate-800'}`}>
                               {isChecked && <CheckSquare className="w-3.5 h-3.5" />}
                             </div>
@@ -264,12 +264,6 @@ export default function TickSheetFillPage() {
             ))
           )}
         </div>
-        <div className="mt-8 md:mt-10 flex justify-end relative z-10">
-           <button className="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white px-8 py-3.5 md:py-3 rounded-xl font-bold shadow-lg shadow-blue-600/20 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">
-             Submit Ticksheet
-           </button>
-        </div>
-
       </div>
 
       {/* RIGHT FLOATING UI (Search & Strip) */}
@@ -291,7 +285,7 @@ export default function TickSheetFillPage() {
 
         {/* Floating Single Line Patti (Timeline Strip) */}
         <div className="pointer-events-auto flex-1 w-2.5 md:w-3 rounded-full flex flex-col overflow-hidden shadow-sm md:shadow-md border border-slate-200/30 md:border-slate-200/50 dark:border-slate-700/50 bg-white dark:bg-slate-800">
-          {mockQuestions.map((q) => {
+          {filteredQuestions.map((q) => {
             const answered = isAnswered(q.id);
             return (
               <div 

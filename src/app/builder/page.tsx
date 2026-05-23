@@ -267,7 +267,7 @@ function SortableItem({ node, index, ans, answers, setAnswers, defaultDate, defa
 }
 
 // --- LIVE PREVIEW ---
-function LivePreview({ nodes, onReorder }: { nodes: any[], onReorder?: (newNodes: any[]) => void }) {
+function LivePreview({ nodes, onReorder, isMobileBuilder = false }: { nodes: any[], onReorder?: (newNodes: any[]) => void, isMobileBuilder?: boolean }) {
   const [answers, setAnswers] = useState<Record<string, any>>({});
 
   const now = new Date();
@@ -299,18 +299,20 @@ function LivePreview({ nodes, onReorder }: { nodes: any[], onReorder?: (newNodes
   };
 
   return (
-    <div className="flex-1 p-4 overflow-y-auto bg-[#F1F5F9] flex justify-center items-start">
-      <div className="w-[290px] min-h-[560px] bg-white rounded-[28px] shadow-2xl border-[6px] border-slate-900 p-3 relative flex flex-col">
-        <div className="w-20 h-5 bg-slate-900 absolute top-[-2px] left-1/2 -translate-x-1/2 rounded-b-xl z-10"></div>
+    <div className={`flex-1 p-4 overflow-y-auto ${isMobileBuilder ? 'bg-transparent w-full' : 'bg-[#F1F5F9]'} flex justify-center items-start`}>
+      <div className={isMobileBuilder ? "w-full mx-auto relative flex flex-col" : "w-[290px] min-h-[560px] bg-white rounded-[28px] shadow-2xl border-[6px] border-slate-900 p-3 relative flex flex-col"}>
+        {!isMobileBuilder && <div className="w-20 h-5 bg-slate-900 absolute top-[-2px] left-1/2 -translate-x-1/2 rounded-b-xl z-10"></div>}
 
-        <div className="mt-7 flex justify-between items-center mb-3 border-b border-slate-100 pb-2 px-1 shrink-0">
+        <div className={`mt-7 flex justify-between items-center mb-3 border-b ${isMobileBuilder ? 'border-slate-200 dark:border-slate-700 pb-4' : 'border-slate-100 pb-2'} px-1 shrink-0`}>
           <div>
-            <h1 className="text-[14px] font-bold text-slate-800 tracking-tight">Questionnaire Preview</h1>
+            <h1 className={`${isMobileBuilder ? 'text-2xl' : 'text-[14px]'} font-bold text-slate-800 dark:text-slate-100 tracking-tight`}>{isMobileBuilder ? 'Mobile Builder' : 'Questionnaire Preview'}</h1>
             <p className="text-[10px] text-slate-400 font-medium">{nodes.length} questions</p>
           </div>
-          <button onClick={() => setAnswers({})} className="text-blue-600 hover:bg-blue-50 p-1.5 rounded-full" title="Reset">
-            <Play className="w-3.5 h-3.5" />
-          </button>
+          {!isMobileBuilder && (
+            <button onClick={() => setAnswers({})} className="text-blue-600 hover:bg-blue-50 p-1.5 rounded-full" title="Reset">
+              <Play className="w-3.5 h-3.5" />
+            </button>
+          )}
         </div>
 
         <div className="flex-1 overflow-y-auto px-1 space-y-3 pb-8">
@@ -650,8 +652,8 @@ function QuestionnaireBuilder() {
         </div>
       </aside>
 
-      {/* CANVAS */}
-      <main className="flex-1 relative" ref={reactFlowWrapper}>
+      {/* DESKTOP CANVAS */}
+      <main className="hidden md:block flex-1 relative" ref={reactFlowWrapper}>
         <ReactFlow
           nodes={nodes}
           edges={edges}
@@ -669,6 +671,19 @@ function QuestionnaireBuilder() {
           <Controls className="!bg-white dark:!bg-slate-800 !border-slate-200 dark:!border-slate-700 !shadow-lg rounded-lg overflow-hidden" />
         </ReactFlow>
       </main>
+
+      {/* MOBILE LIST BUILDER (Google Forms Style) */}
+      <div className="flex md:hidden flex-col flex-1 w-full h-full bg-slate-50/50 dark:bg-slate-900 overflow-hidden">
+         <LivePreview nodes={nodes} onReorder={setNodes} isMobileBuilder={true} />
+         <div className="p-4 bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 shadow-[0_-4px_15px_-5px_rgba(0,0,0,0.1)]">
+           <button 
+             onClick={() => alert("To add questions on mobile, use the desktop version for advanced drag-and-drop or select from the quick-add menu (Coming soon).")}
+             className="w-full bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl text-sm font-bold shadow-lg shadow-blue-600/20 flex items-center justify-center gap-2"
+           >
+             <Plus className="w-4 h-4" /> Add Question
+           </button>
+         </div>
+      </div>
 
       {/* RIGHT PANEL: Live Preview */}
       <aside className="w-[340px] border-l border-slate-200/50 dark:border-slate-800/50 bg-white/50 dark:bg-slate-900/50 backdrop-blur-md flex flex-col shadow-sm z-10 hidden 2xl:flex">
