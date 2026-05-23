@@ -10,6 +10,7 @@ import {
   DndContext,
   closestCenter,
   PointerSensor,
+  TouchSensor,
   useSensor,
   useSensors,
   DragEndEvent,
@@ -284,6 +285,12 @@ function LivePreview({ nodes, onReorder, isMobileBuilder = false }: { nodes: any
       activationConstraint: {
         distance: 8,
       },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 200,
+        tolerance: 5,
+      },
     })
   );
 
@@ -472,7 +479,7 @@ function QuestionnaireBuilder() {
   return (
     <div className="h-full w-full flex overflow-hidden bg-transparent text-slate-800 font-sans">
       {/* TOOLBOX SIDEBAR */}
-      <aside className="w-[250px] bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-r border-slate-200/50 dark:border-slate-800/50 flex flex-col h-full shrink-0 shadow-sm z-10">
+      <aside className="hidden md:flex w-[250px] bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-r border-slate-200/50 dark:border-slate-800/50 flex-col h-full shrink-0 shadow-sm z-10">
         <div className="p-3 border-b border-slate-200/50 dark:border-slate-800/50 space-y-3">
           <input
             type="text"
@@ -703,10 +710,7 @@ function QuestionnaireBuilder() {
              <div className="space-y-4 pb-24">
                {nodes.map((node, i) => (
                  <div key={node.id} className="relative">
-                   <div className="absolute -left-2 top-2 w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold text-[11px] shadow-sm z-10 border border-white">
-                     {i + 1}
-                   </div>
-                   <QuestionNode id={node.id} data={node.data} isConnectable={false} />
+                   <QuestionNode id={node.id} data={node.data} isConnectable={false} index={i} />
                  </div>
                ))}
                <button 
@@ -769,6 +773,69 @@ function QuestionnaireBuilder() {
                            </button>
                          ))}
                        </div>
+                     </div>
+                    </details>
+                   {/* MONTHLY */}
+                   <details className="group">
+                     <summary className="flex items-center gap-2 p-3 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors list-none">
+                       <span className="w-1.5 h-1.5 rounded-full bg-purple-400 inline-block"></span>
+                       <span className="text-[11px] font-bold text-slate-700 dark:text-slate-300">Monthly Rule</span>
+                       <span className="ml-auto text-[9px] font-bold text-slate-400 group-open:hidden">{scheduleMonthlyType}</span>
+                       <ChevronDown className="w-3.5 h-3.5 text-slate-400 ml-1 group-open:-rotate-180 transition-transform" />
+                     </summary>
+                     <div className="px-3 pb-3 pt-0 space-y-2">
+                       <select
+                         className="w-full p-1.5 border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 rounded-lg text-[11px] text-slate-700 dark:text-slate-300 font-medium focus:outline-none focus:border-blue-400"
+                         value={scheduleMonthlyType}
+                         onChange={(e) => setScheduleMonthlyType(e.target.value)}
+                       >
+                         <option value="Date">On Date(s)</option>
+                         <option value="Interval">Every X Days</option>
+                       </select>
+
+                       {scheduleMonthlyType === 'Date' && (
+                         <div className="grid grid-cols-7 gap-0.5 pt-1">
+                           {Array.from({ length: 31 }, (_, i) => i + 1).map(d => (
+                             <button key={d} onClick={() => {
+                               setScheduleMonthlyDates(prev => prev.includes(d) ? prev.filter(x => x !== d) : [...prev, d].sort((a,b)=>a-b))
+                             }}
+                               className={`py-1 text-[9px] font-bold rounded border transition-all ${
+                                 scheduleMonthlyDates.includes(d)
+                                   ? 'bg-blue-500 border-blue-500 text-white'
+                                   : 'bg-white border-slate-200 text-slate-400 hover:bg-blue-50 hover:border-blue-300 dark:bg-slate-800 dark:border-slate-600 dark:text-slate-400'
+                               }`}
+                             >{d}</button>
+                           ))}
+                         </div>
+                       )}
+
+                       {scheduleMonthlyType === 'Interval' && (
+                         <div className="space-y-1.5 pt-1">
+                           {scheduleMonthlyIntervals.map((val, i) => (
+                             <div key={i} className="flex items-center gap-2 bg-slate-50 dark:bg-slate-800/80 border border-slate-100 dark:border-slate-700 rounded-lg p-1.5">
+                               <span className="text-[10px] font-medium text-slate-400 shrink-0">Every</span>
+                               <input type="number" min="1" max="365"
+                                 className="w-12 p-1 border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-900 rounded text-[11px] text-slate-700 dark:text-slate-300 font-bold text-center focus:outline-none focus:border-blue-400"
+                                 value={val}
+                                 onChange={(e) => {
+                                   const newArr = [...scheduleMonthlyIntervals];
+                                   newArr[i] = Number(e.target.value);
+                                   setScheduleMonthlyIntervals(newArr);
+                                 }}
+                               />
+                               <span className="text-[10px] font-medium text-slate-400 flex-1">days</span>
+                               {scheduleMonthlyIntervals.length > 1 && (
+                                 <button onClick={() => {
+                                   setScheduleMonthlyIntervals(prev => prev.filter((_, idx) => idx !== i))
+                                 }} className="w-5 h-5 flex items-center justify-center text-red-400 hover:text-red-600 hover:bg-red-50 rounded transition-all text-[10px] font-bold">✕</button>
+                               )}
+                             </div>
+                           ))}
+                           <button onClick={() => setScheduleMonthlyIntervals(prev => [...prev, 7])} className="w-full py-1.5 text-[10px] font-bold text-blue-500 hover:text-blue-700 hover:bg-blue-50 rounded-lg border border-dashed border-blue-200 transition-all flex items-center justify-center gap-1">
+                             <Plus className="w-3 h-3" /> Add Interval
+                           </button>
+                         </div>
+                       )}
                      </div>
                    </details>
                  </div>

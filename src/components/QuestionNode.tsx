@@ -64,7 +64,7 @@ function SectionHeader({ icon: Icon, title, count, open, onToggle, accentColor =
   );
 }
 
-export default function QuestionNode({ id, data, isConnectable }: any) {
+export default function QuestionNode({ id, data, isConnectable, index }: any) {
   const { setNodes, setEdges } = useReactFlow();
   const [localLabel, setLocalLabel] = useState(data.label || '');
   const [localDescription, setLocalDescription] = useState(data.description || '');
@@ -138,15 +138,39 @@ export default function QuestionNode({ id, data, isConnectable }: any) {
 
       {/* ── HEADER ── */}
       <div className="bg-[#F8FAFC] border-b border-slate-200 px-3 py-2.5 flex items-center gap-2 cursor-move rounded-t-2xl">
-        <div className="flex items-center gap-2 text-slate-700 font-bold text-[13px] tracking-tight flex-1 min-w-0">
-          {getIcon(data.type)}
-          <span className="truncate">{data.type}</span>
+        <div className="flex items-center gap-2 flex-1 min-w-0 nodrag">
+          {index !== undefined && (
+            <div className="w-5 h-5 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-extrabold text-[10px] shrink-0 shadow-sm border border-white">
+              {index + 1}
+            </div>
+          )}
+          
+          <div className="relative flex items-center bg-white border border-slate-200 rounded-lg px-2 py-1 shadow-sm hover:border-blue-400 transition-colors cursor-pointer group/select flex-1 max-w-[160px]">
+            {getIcon(data.type)}
+            <select 
+              className="appearance-none bg-transparent border-none focus:outline-none focus:ring-0 cursor-pointer font-bold truncate text-slate-700 w-full pl-1.5 pr-4 text-[11px]"
+              value={data.type || 'Short Text'}
+              onChange={(e) => updateNodeData({ type: e.target.value })}
+            >
+              <option value="Short Text">Short Text</option>
+              <option value="Long Text">Long Text</option>
+              <option value="Number">Number</option>
+              <option value="Dropdown">Dropdown</option>
+              <option value="Multiple Option">Multiple Option</option>
+              <option value="Image Attach">Image Attach</option>
+              <option value="Video Attach">Video Attach</option>
+              <option value="Date">Date</option>
+              <option value="Date & Time">Date & Time</option>
+              <option value="Time">Time</option>
+            </select>
+            <ChevronDown className="w-3.5 h-3.5 text-slate-400 absolute right-1.5 pointer-events-none group-hover/select:text-blue-500 transition-colors" />
+          </div>
         </div>
         {/* Frequency pill */}
-        <div className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold text-white ${freqColors[freq]}`}>
+        <div className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold text-white shrink-0 ${freqColors[freq]}`}>
           <span className="w-1 h-1 rounded-full bg-white/60 inline-block"></span>{freq}
         </div>
-        <div className="flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+        <div className="flex gap-0.5 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity shrink-0">
           <button onClick={onDuplicate} className="p-1.5 text-slate-400 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-colors nodrag"><Copy className="w-3.5 h-3.5" /></button>
           <button onClick={onDelete} className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors nodrag"><Trash2 className="w-3.5 h-3.5" /></button>
         </div>
