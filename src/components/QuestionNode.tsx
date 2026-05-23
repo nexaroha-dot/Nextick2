@@ -68,7 +68,7 @@ export default function QuestionNode({ id, data, isConnectable }: any) {
   const { setNodes, setEdges } = useReactFlow();
   const [localLabel, setLocalLabel] = useState(data.label || '');
   const [localDescription, setLocalDescription] = useState(data.description || '');
-  const [openSections, setOpenSections] = useState({ options: true, format: false, schedule: false, settings: false });
+  const [openSections, setOpenSections] = useState({ options: true, format: false, schedule: false, settings: false, description: false });
 
   useEffect(() => { 
     setLocalLabel(data.label || ''); 
@@ -155,21 +155,14 @@ export default function QuestionNode({ id, data, isConnectable }: any) {
       {/* ── BODY ── */}
       <div className="p-3 space-y-1.5 nopan">
 
-        {/* Question Label & Description */}
-        <div className="space-y-1.5">
+        {/* Question Label */}
+        <div className="mb-2">
           <textarea
             className="w-full text-[13px] border border-slate-200 rounded-xl p-2.5 focus:border-blue-400 focus:ring-1 focus:ring-blue-100 focus:outline-none bg-slate-50 hover:bg-white transition-colors nodrag text-slate-800 font-bold resize-none min-h-[52px]"
             value={localLabel}
             onChange={(e) => setLocalLabel(e.target.value)}
             onBlur={() => updateNodeData({ label: localLabel })}
             placeholder="Type your question..."
-          />
-          <textarea
-            className="w-full text-[11px] border border-slate-200/60 rounded-xl p-2 focus:border-blue-400 focus:ring-1 focus:ring-blue-100 focus:outline-none bg-slate-50/50 hover:bg-white transition-colors nodrag text-slate-500 font-medium resize-none min-h-[38px]"
-            value={localDescription}
-            onChange={(e) => setLocalDescription(e.target.value)}
-            onBlur={() => updateNodeData({ description: localDescription })}
-            placeholder="Add instruction details or description..."
           />
         </div>
 
@@ -455,6 +448,23 @@ export default function QuestionNode({ id, data, isConnectable }: any) {
             </div>
           )}
         </div>
+
+        {/* ── SECTION: Description & Instructions ── */}
+        <div className="border border-slate-100 rounded-xl overflow-hidden">
+          <SectionHeader icon={FileText} title="Description & Instructions" open={openSections.description} onToggle={() => toggle('description')} accentColor="green" />
+          {openSections.description && (
+            <div className="px-3 pb-3 border-t border-slate-100 pt-2">
+              <textarea
+                className="w-full text-[11px] border border-slate-200/60 rounded-xl p-2.5 focus:border-blue-400 focus:ring-1 focus:ring-blue-100 focus:outline-none bg-slate-50 hover:bg-white transition-colors nodrag text-slate-600 font-medium resize-none min-h-[52px]"
+                value={localDescription}
+                onChange={(e) => setLocalDescription(e.target.value)}
+                onBlur={() => updateNodeData({ description: localDescription })}
+                placeholder="Add instruction details or description..."
+              />
+            </div>
+          )}
+        </div>
+
       </div>
     </div>
   );
