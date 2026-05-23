@@ -90,30 +90,32 @@ export default function TickSheetModulePage() {
           </div>
         ) : (
           filteredSheets.map((sheet) => (
-            <div key={sheet._id} className="glass-panel border border-slate-200/50 dark:border-slate-700/50 rounded-2xl p-6 hover:border-blue-500/50 hover:shadow-xl transition-all duration-300 group flex flex-col relative cursor-pointer overflow-hidden bg-white/60 dark:bg-slate-900/60 shadow-sm">
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-400 to-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-              
-              <div className="flex justify-between items-start mb-6">
-                <div className="bg-blue-50 dark:bg-blue-900/30 p-3 rounded-xl group-hover:scale-110 transition-transform">
-                  <FileText className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+            <Link href={`/tick-sheet/fill/${sheet._id}`} key={sheet._id} className="block h-full">
+              <div className="glass-panel border border-slate-200/50 dark:border-slate-700/50 rounded-2xl p-6 hover:border-blue-500/50 hover:shadow-xl transition-all duration-300 group flex flex-col relative cursor-pointer overflow-hidden bg-white/60 dark:bg-slate-900/60 shadow-sm h-full">
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-400 to-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                
+                <div className="flex justify-between items-start mb-6">
+                  <div className="bg-blue-50 dark:bg-blue-900/30 p-3 rounded-xl group-hover:scale-110 transition-transform">
+                    <FileText className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                  </div>
+                </div>
+                
+                <div className="flex-1">
+                  <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 leading-tight mb-2 line-clamp-2">
+                    {sheet.title}
+                  </h3>
+                </div>
+                
+                <div className="flex items-center justify-between mt-6 pt-4 border-t border-slate-100 dark:border-slate-800/50">
+                  <span className="px-3 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-full text-[10px] font-extrabold uppercase tracking-widest">
+                    Ticksheet
+                  </span>
+                  <span className="text-xs font-semibold text-slate-400">
+                    {sheet.date}
+                  </span>
                 </div>
               </div>
-              
-              <div className="flex-1">
-                <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 leading-tight mb-2 line-clamp-2">
-                  {sheet.title}
-                </h3>
-              </div>
-              
-              <div className="flex items-center justify-between mt-6 pt-4 border-t border-slate-100 dark:border-slate-800/50">
-                <span className="px-3 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-full text-[10px] font-extrabold uppercase tracking-widest">
-                  Ticksheet
-                </span>
-                <span className="text-xs font-semibold text-slate-400">
-                  {sheet.date}
-                </span>
-              </div>
-            </div>
+            </Link>
           ))
         )}
       </div>
