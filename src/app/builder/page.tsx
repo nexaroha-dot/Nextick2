@@ -370,6 +370,7 @@ function QuestionnaireBuilder() {
 
   const [questionnaireTitle, setQuestionnaireTitle] = useState('Daily Machine Checklist');
   const [isSaving, setIsSaving] = useState(false);
+  const [activeMobileTab, setActiveMobileTab] = useState('questions'); // questions, settings, preview
 
   const [scheduleType, setScheduleType] = useState('Daily');
   const [scheduleExceptions, setScheduleExceptions] = useState<string[]>([]);
@@ -673,16 +674,130 @@ function QuestionnaireBuilder() {
       </main>
 
       {/* MOBILE LIST BUILDER (Google Forms Style) */}
-      <div className="flex md:hidden flex-col flex-1 w-full h-full bg-slate-50/50 dark:bg-slate-900 overflow-hidden">
-         <LivePreview nodes={nodes} onReorder={setNodes} isMobileBuilder={true} />
-         <div className="p-4 bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 shadow-[0_-4px_15px_-5px_rgba(0,0,0,0.1)]">
-           <button 
-             onClick={() => alert("To add questions on mobile, use the desktop version for advanced drag-and-drop or select from the quick-add menu (Coming soon).")}
-             className="w-full bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl text-sm font-bold shadow-lg shadow-blue-600/20 flex items-center justify-center gap-2"
-           >
-             <Plus className="w-4 h-4" /> Add Question
-           </button>
+      <div className="flex md:hidden flex-col flex-1 w-full h-full bg-slate-50/50 dark:bg-[#0B1120] overflow-hidden relative z-50">
+         {/* Mobile Header / Tabs */}
+         <div className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 px-4 pt-4 flex flex-col shrink-0">
+           <input 
+             type="text" 
+             className="w-full bg-transparent text-xl font-extrabold text-slate-800 dark:text-white focus:outline-none mb-4"
+             value={questionnaireTitle}
+             onChange={(e) => setQuestionnaireTitle(e.target.value)}
+             placeholder="Questionnaire Title"
+           />
+           <div className="flex items-center gap-6 overflow-x-auto hide-scrollbar">
+             {['questions', 'settings', 'preview'].map(tab => (
+               <button 
+                 key={tab}
+                 onClick={() => setActiveMobileTab(tab)}
+                 className={`pb-3 text-sm font-bold capitalize whitespace-nowrap transition-colors border-b-2 ${activeMobileTab === tab ? 'border-blue-600 text-blue-600' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
+               >
+                 {tab}
+               </button>
+             ))}
+           </div>
          </div>
+
+         {/* Mobile Content Area */}
+         <div className="flex-1 overflow-y-auto p-4 relative">
+           {activeMobileTab === 'questions' && (
+             <div className="space-y-4 pb-24">
+               {nodes.map((node, i) => (
+                 <div key={node.id} className="relative">
+                   <div className="absolute -left-2 top-2 w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold text-[11px] shadow-sm z-10 border border-white">
+                     {i + 1}
+                   </div>
+                   <QuestionNode id={node.id} data={node.data} isConnectable={false} />
+                 </div>
+               ))}
+               <button 
+                 onClick={() => {
+                   const newNode = {
+                     id: getId(), type: 'question', position: { x: 0, y: 0 },
+                     data: { label: '', type: 'Short Text', required: false }
+                   };
+                   setNodes(nds => [...nds, newNode]);
+                 }}
+                 className="w-full bg-white dark:bg-slate-800 border-2 border-dashed border-blue-300 dark:border-slate-600 hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 text-blue-600 dark:text-blue-400 py-4 rounded-2xl font-bold transition-all flex items-center justify-center gap-2 shadow-sm"
+               >
+                 <Plus className="w-5 h-5" /> Add New Question
+               </button>
+             </div>
+           )}
+
+           {activeMobileTab === 'settings' && (
+             <div className="pb-24">
+               {/* SCHEDULE MODULE — Accordion style (Copied from Desktop Sidebar) */}
+               <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 overflow-hidden shadow-sm">
+                 <div className="bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 px-3 py-2.5 flex items-center gap-2">
+                   <Calendar className="w-4 h-4 text-blue-500" />
+                   <span className="text-[12px] font-bold text-slate-700 dark:text-slate-200">This Ticksheet Schedules</span>
+                 </div>
+                 <div className="divide-y divide-slate-100 dark:divide-slate-700/50">
+                   {/* DAILY */}
+                   <details className="group" open>
+                     <summary className="flex items-center gap-2 p-3 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors list-none">
+                       <span className="w-1.5 h-1.5 rounded-full bg-red-400 inline-block"></span>
+                       <span className="text-[11px] font-bold text-slate-700 dark:text-slate-300">Daily Exceptions</span>
+                       <span className="ml-auto text-[9px] font-bold text-slate-400 group-open:hidden">{scheduleExceptions.length} skip days</span>
+                       <ChevronDown className="w-3.5 h-3.5 text-slate-400 ml-1 group-open:-rotate-180 transition-transform" />
+                     </summary>
+                     <div className="px-3 pb-3 pt-0">
+                       <div className="flex flex-wrap gap-1">
+                         {DAYS.map(day => (
+                           <button key={day} onClick={() => setScheduleExceptions(prev => prev.includes(day) ? prev.filter(d => d !== day) : [...prev, day])}
+                             className={`px-2 py-1 text-[10px] font-bold rounded-md border transition-all ${scheduleExceptions.includes(day) ? 'bg-red-500 border-red-500 text-white shadow-sm' : 'bg-white border-slate-200 text-slate-500'}`}>
+                             {day.substring(0, 3)}
+                           </button>
+                         ))}
+                       </div>
+                     </div>
+                   </details>
+                   {/* WEEKLY */}
+                   <details className="group">
+                     <summary className="flex items-center gap-2 p-3 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors list-none">
+                       <span className="w-1.5 h-1.5 rounded-full bg-blue-400 inline-block"></span>
+                       <span className="text-[11px] font-bold text-slate-700 dark:text-slate-300">Weekly Occurrences</span>
+                       <span className="ml-auto text-[9px] font-bold text-slate-400 group-open:hidden">{scheduleOccurrences.length} days active</span>
+                       <ChevronDown className="w-3.5 h-3.5 text-slate-400 ml-1 group-open:-rotate-180 transition-transform" />
+                     </summary>
+                     <div className="px-3 pb-3 pt-0">
+                       <div className="flex flex-wrap gap-1">
+                         {DAYS.map(day => (
+                           <button key={day} onClick={() => setScheduleOccurrences(prev => prev.includes(day) ? prev.filter(d => d !== day) : [...prev, day])}
+                             className={`px-2 py-1 text-[10px] font-bold rounded-md border transition-all ${scheduleOccurrences.includes(day) ? 'bg-blue-500 border-blue-500 text-white shadow-sm' : 'bg-white border-slate-200 text-slate-500'}`}>
+                             {day.substring(0, 3)}
+                           </button>
+                         ))}
+                       </div>
+                     </div>
+                   </details>
+                 </div>
+                 <button onClick={saveAsDefault} className="w-full py-2.5 bg-slate-50 dark:bg-slate-800 hover:bg-blue-50 text-[10px] font-bold text-blue-600 transition-all border-t border-slate-200 dark:border-slate-700 flex items-center justify-center gap-1.5">
+                   <Save className="w-3.5 h-3.5" /> Save as Default For this ticksheet
+                 </button>
+               </div>
+             </div>
+           )}
+
+           {activeMobileTab === 'preview' && (
+             <div className="pb-24 -m-4 h-[calc(100%+2rem)]">
+               <LivePreview nodes={nodes} onReorder={setNodes} isMobileBuilder={true} />
+             </div>
+           )}
+         </div>
+
+         {/* Fixed Save Button */}
+         {activeMobileTab !== 'preview' && (
+           <div className="absolute bottom-0 left-0 w-full p-4 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 shadow-[0_-10px_30px_-10px_rgba(0,0,0,0.1)]">
+             <button 
+               onClick={handleSaveQuestionnaire}
+               disabled={isSaving}
+               className="w-full bg-blue-600 hover:bg-blue-700 text-white px-5 py-3.5 rounded-xl text-sm font-bold shadow-lg shadow-blue-600/20 flex items-center justify-center gap-2 transition-transform active:scale-95"
+             >
+               {isSaving ? 'Saving...' : <><Save className="w-4 h-4" /> Save Ticksheet</>}
+             </button>
+           </div>
+         )}
       </div>
 
       {/* RIGHT PANEL: Live Preview */}

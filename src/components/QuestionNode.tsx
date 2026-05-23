@@ -134,7 +134,7 @@ export default function QuestionNode({ id, data, isConnectable }: any) {
   const freqColors: any = { Daily: 'bg-green-500', Weekly: 'bg-blue-500', Monthly: 'bg-purple-500' };
 
   return (
-    <div className="w-[360px] bg-white rounded-2xl shadow-lg border border-slate-200 overflow-visible group flex flex-col font-sans" onClick={e => e.stopPropagation()}>
+    <div className={`w-[360px] max-w-full bg-white rounded-2xl shadow-lg border border-slate-200 overflow-visible group flex flex-col font-sans ${!isConnectable ? 'w-full' : ''}`} onClick={e => e.stopPropagation()}>
 
       {/* ── HEADER ── */}
       <div className="bg-[#F8FAFC] border-b border-slate-200 px-3 py-2.5 flex items-center gap-2 cursor-move rounded-t-2xl">
