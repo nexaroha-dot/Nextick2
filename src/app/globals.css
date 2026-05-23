@@ -1,26 +1,54 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
+:root {
+  --background: #f8fafc; /* slate-50 */
+  --foreground: #0f172a; /* slate-900 */
+  
+  /* Primary Blue */
+  --primary: #2563eb; /* blue-600 */
+  --primary-foreground: #ffffff;
+  
+  --muted: #f1f5f9; /* slate-100 */
+  --muted-foreground: #64748b; /* slate-500 */
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #020617; /* slate-950 */
+    --foreground: #f8fafc; /* slate-50 */
+    
+    /* Primary Blue */
+    --primary: #3b82f6; /* blue-500 */
+    --primary-foreground: #ffffff;
+    
+    --muted: #0f172a; /* slate-900 */
+    --muted-foreground: #94a3b8; /* slate-400 */
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  @apply antialiased transition-colors duration-300;
+}
+
+/* Glassmorphism Utilities */
+.glass {
+  @apply bg-white/70 dark:bg-slate-900/70 backdrop-blur-md border border-white/20 dark:border-slate-800/50 shadow-sm;
+}
+.glass-panel {
+  @apply bg-white/40 dark:bg-slate-900/40 backdrop-blur-lg border border-white/30 dark:border-slate-800/60 shadow-lg rounded-xl;
 }

@@ -18,6 +18,8 @@ export const metadata: Metadata = {
   description: "Enterprise grade management application",
 };
 
+import ClientLayoutWrapper from "@/components/shared/ClientLayoutWrapper";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -28,11 +30,10 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} antialiased h-full`}
     >
-      <body className="flex h-screen overflow-hidden bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-50">
-        <Sidebar />
-        <main className="flex-1 overflow-y-auto">
+      <body className="flex h-screen overflow-hidden bg-gradient-to-br from-slate-50 to-blue-50/50 dark:from-slate-950 dark:to-blue-950/20 text-slate-900 dark:text-slate-50">
+        <ClientLayoutWrapper>
           {children}
-        </main>
+        </ClientLayoutWrapper>
       </body>
     </html>
   );
