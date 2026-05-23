@@ -56,16 +56,16 @@ export default function CreateHubPage() {
     <div className="flex-1 flex flex-col h-full overflow-y-auto bg-transparent p-4 md:p-8 font-sans">
       
       {/* Header Area */}
-      <div className="pb-6 flex justify-between items-start animate-in fade-in slide-in-from-top-4 duration-500">
+      <div className="pb-6 flex flex-col sm:flex-row sm:items-center justify-between items-start gap-4 animate-in fade-in slide-in-from-top-4 duration-500">
         <div>
-          <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Ticksheets & Forms</h1>
+          <h1 className="text-2xl md:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Ticksheets & Forms</h1>
           <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 font-medium">Manage your organization's forms, SOPs, and ticksheets.</p>
         </div>
         
-        <div className="relative">
+        <div className="relative w-full sm:w-auto self-start sm:self-auto">
           <button 
             onClick={() => setDropdownOpen(!dropdownOpen)}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-all shadow-lg shadow-blue-600/20 active:scale-95 flex items-center gap-2"
+            className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 sm:py-2.5 rounded-xl text-sm font-bold transition-all shadow-lg shadow-blue-600/20 active:scale-95 flex items-center justify-center gap-2"
           >
             <Plus className="w-4 h-4" /> Create New
           </button>
@@ -73,7 +73,7 @@ export default function CreateHubPage() {
           {dropdownOpen && (
             <>
               <div className="fixed inset-0 z-40" onClick={() => setDropdownOpen(false)}></div>
-              <div className="absolute right-0 mt-2 w-64 glass-panel border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl z-50 overflow-hidden py-1 animate-in zoom-in-95 duration-200">
+              <div className="absolute right-0 left-0 sm:left-auto mt-2 w-full sm:w-64 glass-panel border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl z-50 overflow-hidden py-1 animate-in zoom-in-95 duration-200">
                 <Link href="/builder" onClick={() => setDropdownOpen(false)} className="flex items-center gap-3 px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer group">
                   <div className="bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 p-2.5 rounded-lg group-hover:scale-110 transition-transform">
                     <FileText className="w-4 h-4" />

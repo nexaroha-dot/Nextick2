@@ -273,7 +273,7 @@ export default function TickSheetFillPage() {
       </div>
 
       {/* RIGHT FLOATING UI (Search & Strip) */}
-      <div className="fixed md:top-8 md:bottom-8 right-2 md:right-8 top-1/2 -translate-y-1/2 md:translate-y-0 h-[60vh] md:h-auto flex flex-col items-end pointer-events-none z-50">
+      <div className="fixed right-2 md:right-8 top-4 bottom-20 md:top-8 md:bottom-8 flex flex-col items-end pointer-events-none z-50">
         
         {/* Floating Search Box - Desktop Only */}
         <div className="hidden md:block pointer-events-auto w-64 mb-6 shadow-lg rounded-xl overflow-hidden bg-white/80 backdrop-blur-md dark:bg-slate-800/80 border border-slate-200/50 dark:border-slate-700/50">
