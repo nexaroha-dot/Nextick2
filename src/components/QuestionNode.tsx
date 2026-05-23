@@ -67,9 +67,13 @@ function SectionHeader({ icon: Icon, title, count, open, onToggle, accentColor =
 export default function QuestionNode({ id, data, isConnectable }: any) {
   const { setNodes, setEdges } = useReactFlow();
   const [localLabel, setLocalLabel] = useState(data.label || '');
+  const [localDescription, setLocalDescription] = useState(data.description || '');
   const [openSections, setOpenSections] = useState({ options: true, format: false, schedule: false, settings: false });
 
-  useEffect(() => { setLocalLabel(data.label || ''); }, [data.label]);
+  useEffect(() => { 
+    setLocalLabel(data.label || ''); 
+    setLocalDescription(data.description || '');
+  }, [data.label, data.description]);
 
   const toggle = (s: string) => setOpenSections(p => ({ ...p, [s]: !p[s as keyof typeof p] }));
 
@@ -86,7 +90,7 @@ export default function QuestionNode({ id, data, isConnectable }: any) {
     setNodes(nodes => {
       const node = nodes.find(n => n.id === id);
       if (!node) return nodes;
-      return [...nodes, { ...node, id: `${id}-copy-${Date.now()}`, position: { x: node.position.x + 40, y: node.position.y + 40 }, data: { ...node.data, label: `${node.data.label} (Copy)` } }];
+      return [...nodes, { ...node, id: `${id}-copy-${Date.now()}`, position: { x: node.position.x + 40, y: node.position.y + 40 }, data: { ...node.data, label: `${node.data.label} (Copy)`, description: node.data.description } }];
     });
   };
 
@@ -149,16 +153,23 @@ export default function QuestionNode({ id, data, isConnectable }: any) {
       </div>
 
       {/* ── BODY ── */}
-      <div className="p-3 space-y-1 nopan">
+      <div className="p-3 space-y-1.5 nopan">
 
-        {/* Question Label */}
-        <div className="mb-2">
+        {/* Question Label & Description */}
+        <div className="space-y-1.5">
           <textarea
-            className="w-full text-[13px] border border-slate-200 rounded-xl p-2.5 focus:border-blue-400 focus:ring-1 focus:ring-blue-100 focus:outline-none bg-slate-50 hover:bg-white transition-colors nodrag text-slate-800 font-medium resize-none min-h-[52px]"
+            className="w-full text-[13px] border border-slate-200 rounded-xl p-2.5 focus:border-blue-400 focus:ring-1 focus:ring-blue-100 focus:outline-none bg-slate-50 hover:bg-white transition-colors nodrag text-slate-800 font-bold resize-none min-h-[52px]"
             value={localLabel}
             onChange={(e) => setLocalLabel(e.target.value)}
             onBlur={() => updateNodeData({ label: localLabel })}
             placeholder="Type your question..."
+          />
+          <textarea
+            className="w-full text-[11px] border border-slate-200/60 rounded-xl p-2 focus:border-blue-400 focus:ring-1 focus:ring-blue-100 focus:outline-none bg-slate-50/50 hover:bg-white transition-colors nodrag text-slate-500 font-medium resize-none min-h-[38px]"
+            value={localDescription}
+            onChange={(e) => setLocalDescription(e.target.value)}
+            onBlur={() => updateNodeData({ description: localDescription })}
+            placeholder="Add instruction details or description..."
           />
         </div>
 
