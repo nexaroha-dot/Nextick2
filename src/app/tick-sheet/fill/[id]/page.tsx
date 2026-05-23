@@ -290,7 +290,7 @@ export default function TickSheetFillPage() {
         </div>
 
         {/* Floating Single Line Patti (Timeline Strip) */}
-        <div className="pointer-events-auto flex-1 w-1.5 md:w-2.5 rounded-full flex flex-col overflow-hidden shadow-sm md:shadow-md border border-slate-200/30 md:border-slate-200/50 dark:border-slate-700/50 bg-white dark:bg-slate-800">
+        <div className="pointer-events-auto flex-1 w-2.5 md:w-3 rounded-full flex flex-col overflow-hidden shadow-sm md:shadow-md border border-slate-200/30 md:border-slate-200/50 dark:border-slate-700/50 bg-white dark:bg-slate-800">
           {mockQuestions.map((q) => {
             const answered = isAnswered(q.id);
             return (

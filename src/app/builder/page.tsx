@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback, useRef, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { Layers, FileText, CheckSquare, Type, Hash, Image as ImageIcon, Video, List, LayoutDashboard, Inbox, Users, Megaphone, Puzzle, FolderKanban, Zap, Save, Play, GripVertical, Calendar, CalendarClock, Clock, ChevronUp, ChevronDown } from 'lucide-react';
+import { Layers, FileText, CheckSquare, Type, Hash, Image as ImageIcon, Video, List, LayoutDashboard, Inbox, Users, Megaphone, Puzzle, FolderKanban, Zap, Save, Play, GripVertical, Calendar, CalendarClock, Clock, ChevronUp, ChevronDown, Plus } from 'lucide-react';
 import { ReactFlow, Background, Controls, addEdge, applyNodeChanges, applyEdgeChanges, useReactFlow, ReactFlowProvider } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import QuestionNode from '@/components/QuestionNode';
