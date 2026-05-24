@@ -888,6 +888,108 @@ function QuestionnaireBuilder() {
         <LivePreview nodes={nodes} onReorder={setNodes} />
       </aside>
 
+      {/* SHARE MODAL (Google Docs Style) */}
+      {showSharePopup && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+          <div className="bg-white dark:bg-slate-800 rounded-[28px] shadow-2xl w-full max-w-[520px] overflow-hidden flex flex-col animate-in zoom-in-95 duration-200">
+            {/* Header */}
+            <div className="px-6 pt-6 pb-4 flex items-center justify-between">
+              <h2 className="text-xl font-normal text-slate-800 dark:text-slate-100 truncate pr-4">Share "{questionnaireTitle || 'Untitled Ticksheet'}"</h2>
+              <div className="flex items-center gap-2 shrink-0">
+                <button className="text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700 p-2 rounded-full transition-colors"><HelpCircle className="w-5 h-5" /></button>
+                <button className="text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700 p-2 rounded-full transition-colors"><Settings className="w-5 h-5" /></button>
+              </div>
+            </div>
+
+            {/* Content */}
+            <div className="px-6 space-y-6 pb-6">
+              {/* Input Area */}
+              <div className={`relative border rounded-xl p-1.5 transition-all flex flex-col sm:flex-row items-stretch sm:items-center ${shareEmail ? 'border-blue-500 shadow-[0_0_0_1px_rgba(59,130,246,1)]' : 'border-slate-300 dark:border-slate-600 hover:border-slate-400'}`}>
+                <input 
+                  type="text" 
+                  placeholder="Add people, groups, spaces and calendar events"
+                  className="w-full bg-transparent p-2.5 text-[15px] focus:outline-none text-slate-800 dark:text-slate-200 placeholder:text-slate-500"
+                  value={shareEmail}
+                  onChange={(e) => setShareEmail(e.target.value)}
+                />
+                {shareEmail && (
+                  <div className="flex items-center gap-2 pr-1 pb-1 sm:pb-0 shrink-0 self-end sm:self-auto">
+                    <select 
+                      className="bg-transparent text-[13px] text-slate-600 dark:text-slate-300 font-medium focus:outline-none cursor-pointer p-1.5 rounded hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors appearance-none"
+                      value={shareAccessLevel}
+                      onChange={(e) => setShareAccessLevel(e.target.value)}
+                    >
+                      <option value="Viewer">Viewer</option>
+                      <option value="Responder">Responder</option>
+                      <option value="Editor">Editor</option>
+                    </select>
+                    <button 
+                      className="bg-[#0B57D0] hover:bg-[#0842A0] text-white px-5 py-2 rounded-full text-sm font-medium transition-all active:scale-95"
+                      onClick={() => {
+                        alert(`Invitation sent to ${shareEmail} as ${shareAccessLevel}`);
+                        setShareEmail('');
+                      }}
+                    >
+                      Send
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* People with access */}
+              <div>
+                <h3 className="text-[13px] font-medium text-slate-600 dark:text-slate-400 mb-3 px-1">People with access</h3>
+                <div className="flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-700/50 p-2 -mx-2 rounded-lg transition-colors">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-[#1A73E8] text-white flex items-center justify-center font-bold text-lg shrink-0">
+                      M
+                    </div>
+                    <div>
+                      <p className="text-[14px] font-semibold text-slate-800 dark:text-slate-200 leading-tight">Mayur Raval (you)</p>
+                      <p className="text-[12px] text-slate-500 mt-0.5">rajraval22542@gmail.com</p>
+                    </div>
+                  </div>
+                  <span className="text-[13px] text-slate-500 font-medium pr-2">Owner</span>
+                </div>
+              </div>
+
+              {/* General Access */}
+              <div className="pt-2">
+                <h3 className="text-[13px] font-medium text-slate-600 dark:text-slate-400 mb-3 px-1">General access</h3>
+                <div className="flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-700/50 p-2 -mx-2 rounded-lg transition-colors cursor-pointer group">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 shrink-0 group-hover:bg-slate-200 dark:group-hover:bg-slate-600 transition-colors">
+                      <Lock className="w-5 h-5" />
+                    </div>
+                    <div className="flex flex-col">
+                      <select className="bg-transparent text-[14px] font-semibold text-slate-800 dark:text-slate-200 focus:outline-none cursor-pointer appearance-none -ml-1 pl-1">
+                        <option value="Restricted">Restricted</option>
+                        <option value="Anyone">Anyone with the link</option>
+                      </select>
+                      <p className="text-[12px] text-slate-500 mt-0.5">Only people with access can open with the link</p>
+                    </div>
+                  </div>
+                  <ChevronDown className="w-4 h-4 text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                </div>
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="px-6 py-5 flex items-center justify-between">
+              <button className="text-[#0B57D0] dark:text-[#A8DDFD] font-semibold text-sm hover:bg-blue-50 dark:hover:bg-blue-900/30 px-5 py-2.5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 transition-all active:scale-95 flex items-center gap-2">
+                <Globe className="w-4 h-4" /> Copy link
+              </button>
+              <button 
+                onClick={() => setShowSharePopup(false)}
+                className="bg-[#0B57D0] hover:bg-[#0842A0] text-white px-6 py-2.5 rounded-full text-sm font-medium transition-all active:scale-95 shadow-sm"
+              >
+                Done
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
