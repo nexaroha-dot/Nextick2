@@ -53,20 +53,6 @@ export default function TickSheetModulePage() {
       status: 'past',
       date: '18/05/2026',
       endDate: 'Ended 18/05/2026'
-    },
-    {
-      _id: 'r1',
-      title: 'Daily Machine Checklist Report',
-      status: 'reports',
-      date: 'May 2026',
-      endDate: 'Monthly'
-    },
-    {
-      _id: 'r2',
-      title: 'Site Safety Audit Report',
-      status: 'reports',
-      date: 'May 2026',
-      endDate: 'Monthly'
     }
   ];
 
@@ -99,13 +85,6 @@ export default function TickSheetModulePage() {
           Past
           {activeTab === 'past' && <div className="absolute bottom-[-9px] left-0 w-full h-0.5 bg-blue-600 rounded-t-md"></div>}
         </button>
-        <button 
-          onClick={() => setActiveTab('reports')}
-          className={`px-5 py-2.5 rounded-t-lg text-[14px] font-bold transition-all relative ${activeTab === 'reports' ? 'text-blue-600' : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200'}`}
-        >
-          Reports
-          {activeTab === 'reports' && <div className="absolute bottom-[-9px] left-0 w-full h-0.5 bg-blue-600 rounded-t-md"></div>}
-        </button>
       </div>
 
       {/* Ticksheet Cards Grid */}
@@ -122,7 +101,7 @@ export default function TickSheetModulePage() {
           filteredSheets.map(sheet => (
             <Link 
               key={sheet._id} 
-              href={sheet.status === 'reports' ? `/reports/${sheet._id}` : sheet.status === 'past' ? `/tick-sheet/past/${sheet._id}` : `/tick-sheet/fill/${sheet._id}`}
+              href={sheet.status === 'past' ? `/tick-sheet/past/${sheet._id}` : `/tick-sheet/fill/${sheet._id}`}
               className="block group"
             >  
               <div className="glass-panel border border-slate-200/50 dark:border-slate-700/50 rounded-2xl p-6 hover:border-blue-500/50 hover:shadow-xl transition-all duration-300 group flex flex-col relative cursor-pointer overflow-hidden bg-white/60 dark:bg-slate-900/60 shadow-sm h-full">
