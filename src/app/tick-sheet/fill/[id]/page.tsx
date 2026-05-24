@@ -103,17 +103,21 @@ export default function TickSheetFillPage() {
     const el = document.getElementById(`question-${id}`);
     if (el) {
       el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      // Add a brief highlight flash
       el.classList.add('ring-2', 'ring-blue-500', 'ring-offset-2');
       setTimeout(() => el.classList.remove('ring-2', 'ring-blue-500', 'ring-offset-2'), 1500);
     }
   };
 
+  // Right strip width + search box width → used for main content right padding
+  const rightPanelWidth = showPointsInQuestionnaire
+    ? 'md:pr-[16rem]'   // strip (3rem) + search (11rem) + gaps
+    : 'md:pr-[5rem]';   // only strip (3rem) + gap
+
   return (
     <div className="relative min-h-screen w-full bg-slate-50/50 dark:bg-[#0B1120] font-sans overflow-y-auto overflow-x-hidden">
       
-      {/* MAIN CONTENT AREA */}
-      <div className="max-w-3xl mx-auto p-4 sm:p-6 md:p-10 pb-32 pt-6 md:pt-10">
+      {/* MAIN CONTENT AREA — right padding shifts based on panel state */}
+      <div className={`max-w-3xl mx-auto p-4 sm:p-6 md:p-10 pb-32 pt-6 md:pt-10 transition-all duration-300 ${rightPanelWidth}`}>
         <div className="mb-6 md:mb-8 relative z-10">
           <Link href="/tick-sheet" className="inline-flex items-center gap-2 text-xs md:text-sm font-bold text-slate-500 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400 transition-colors mb-4 md:mb-4">
             <ArrowLeft className="w-4 h-4" /> <span className="hidden md:inline">Back to Ticksheets</span>
@@ -144,40 +148,40 @@ export default function TickSheetFillPage() {
               <div 
                 key={q.id} 
                 id={`question-${q.id}`}
-                className="bg-white/95 backdrop-blur-xl dark:bg-slate-800/95 border border-slate-200 dark:border-slate-700/50 rounded-2xl p-4 md:p-6 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)] dark:shadow-[0_2px_12px_-4px_rgba(0,0,0,0.2)] transition-all duration-500 relative overflow-hidden"
+                className="bg-white/95 backdrop-blur-xl dark:bg-slate-800/95 border border-slate-200 dark:border-slate-700/50 rounded-2xl p-4 md:p-6 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)] dark:shadow-[0_2px_12px_-4px_rgba(0,0,0,0.2)] transition-all duration-500 relative"
               >
                 {/* Green left border indicator if answered */}
-                <div className={`absolute left-0 top-0 bottom-0 w-1.5 transition-colors duration-300 ${isAnswered(q.id) ? 'bg-green-500' : 'bg-transparent'}`}></div>
+                <div className={`absolute left-0 top-0 bottom-0 w-1.5 rounded-l-2xl transition-colors duration-300 ${isAnswered(q.id) ? 'bg-green-500' : 'bg-transparent'}`}></div>
 
-                <div className="flex flex-col md:flex-row items-start justify-between mb-4 gap-3 md:gap-0">
-                  <div className="flex items-start gap-2.5 max-w-full md:max-w-[80%] w-full">
-                    <span className="text-slate-400 font-bold text-sm md:text-sm mt-0.5">{index + 1}.</span>
-                    <h3 className="text-base md:text-lg font-bold text-slate-800 dark:text-slate-100 leading-tight flex-1">
-                      {q.title}
-                    </h3>
-                    
-                    {/* Info Icon with Tooltip */}
-                    <div className="relative group/tooltip flex items-center -mt-1 md:mt-0">
-                      <button 
-                        onClick={() => setShowDescModal(q.id)}
-                        className="text-slate-400 hover:text-blue-500 transition-colors w-8 h-8 flex items-center justify-center -mr-2 md:mr-0 rounded-full active:bg-slate-100 dark:active:bg-slate-700"
-                      >
-                        <Info className="w-5 h-5 md:w-4 md:h-4" />
-                      </button>
-                      {/* Tooltip */}
-                      <div className="hidden md:block absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-64 p-2 bg-slate-800 dark:bg-slate-700 text-white text-xs rounded-lg opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all z-10 text-center shadow-xl pointer-events-none">
-                        {q.description}
-                        <div className="absolute left-1/2 -translate-x-1/2 top-full w-0 h-0 border-x-4 border-x-transparent border-t-4 border-t-slate-800 dark:border-t-slate-700"></div>
-                      </div>
-                    </div>
-                  </div>
+                {/* Question Header Row */}
+                <div className="flex items-start gap-2.5 mb-4">
+                  {/* Number + Title */}
+                  <span className="text-slate-400 font-bold text-sm mt-0.5 shrink-0">{index + 1}.</span>
+                  <h3 className="text-base md:text-lg font-bold text-slate-800 dark:text-slate-100 leading-tight flex-1 min-w-0">
+                    {q.title}
+                  </h3>
 
-                  {/* Max Points Display */}
+                  {/* Points badge — only when enabled */}
                   {showPointsInQuestionnaire && q.maxMarks && (
-                    <div className="self-start md:self-auto bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap border border-blue-100 dark:border-blue-800/50">
-                      Points up to {q.maxMarks}
+                    <div className="shrink-0 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 px-2.5 py-1 rounded-full text-xs font-bold whitespace-nowrap border border-blue-100 dark:border-blue-800/50">
+                      {q.maxMarks} pts
                     </div>
                   )}
+
+                  {/* Info Icon with Tooltip — always visible, properly positioned */}
+                  <div className="relative group/tooltip shrink-0">
+                    <button 
+                      onClick={() => setShowDescModal(q.id)}
+                      className="text-slate-400 hover:text-blue-500 transition-colors w-8 h-8 flex items-center justify-center rounded-full active:bg-slate-100 dark:active:bg-slate-700"
+                    >
+                      <Info className="w-4 h-4" />
+                    </button>
+                    {/* Tooltip — fixed position toward left to avoid clipping */}
+                    <div className="absolute right-0 bottom-full mb-2 w-64 p-2.5 bg-slate-800 dark:bg-slate-700 text-white text-xs rounded-xl opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all duration-150 z-50 shadow-2xl pointer-events-none leading-relaxed">
+                      {q.description}
+                      <div className="absolute right-3 top-full w-0 h-0 border-x-4 border-x-transparent border-t-4 border-t-slate-800 dark:border-t-slate-700"></div>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Input Rendering based on type */}
@@ -218,7 +222,8 @@ export default function TickSheetFillPage() {
                         onChange={(e) => handleAnswerChange(q.id, e.target.value)}
                         className="w-full border border-slate-200 dark:border-slate-600 rounded-xl p-3.5 md:p-3 pr-10 bg-slate-50/80 dark:bg-slate-900/80 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-sm md:text-base font-medium text-slate-700 dark:text-slate-200 appearance-none cursor-pointer"
                       >
-                        <option value="" disabled>Select an option...</option>
+                        {/* NOT disabled — allows user to re-select blank/reset */}
+                        <option value="">Select an option...</option>
                         {q.options?.map(opt => (
                           <option key={opt} value={opt}>{opt}</option>
                         ))}
@@ -266,11 +271,11 @@ export default function TickSheetFillPage() {
         </div>
       </div>
 
-      {/* RIGHT FLOATING UI (Search & Strip) */}
-      <div className="fixed right-2 md:right-8 top-4 bottom-20 md:top-8 md:bottom-8 flex flex-col items-end pointer-events-none z-50">
+      {/* RIGHT FLOATING PANEL — Search box + Strip */}
+      <div className="fixed right-3 md:right-6 top-4 bottom-20 md:top-8 md:bottom-8 hidden md:flex flex-col items-end gap-3 pointer-events-none z-50">
         
-        {/* Floating Search Box - Desktop Only */}
-        <div className="hidden md:block pointer-events-auto w-64 mb-6 shadow-lg rounded-xl overflow-hidden bg-white/80 backdrop-blur-md dark:bg-slate-800/80 border border-slate-200/50 dark:border-slate-700/50">
+        {/* Search box — always visible on desktop, properly aligned */}
+        <div className="pointer-events-auto w-52 shadow-lg rounded-xl overflow-hidden bg-white/90 backdrop-blur-md dark:bg-slate-800/90 border border-slate-200/60 dark:border-slate-700/60">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
             <input 
@@ -278,13 +283,13 @@ export default function TickSheetFillPage() {
               placeholder="Search questions..." 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-transparent pl-9 pr-4 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-slate-700 dark:text-slate-200"
+              className="w-full bg-transparent pl-9 pr-4 py-2.5 text-sm font-medium focus:outline-none text-slate-700 dark:text-slate-200"
             />
           </div>
         </div>
 
-        {/* Floating Single Line Patti (Timeline Strip) */}
-        <div className="pointer-events-auto flex-1 w-2.5 md:w-3 rounded-full flex flex-col overflow-hidden shadow-sm md:shadow-md border border-slate-200/30 md:border-slate-200/50 dark:border-slate-700/50 bg-white dark:bg-slate-800">
+        {/* Floating Strip (Timeline) */}
+        <div className="pointer-events-auto flex-1 w-2.5 md:w-3 rounded-full flex flex-col overflow-hidden shadow-md border border-slate-200/50 dark:border-slate-700/50 bg-white dark:bg-slate-800">
           {filteredQuestions.map((q) => {
             const answered = isAnswered(q.id);
             return (
@@ -292,7 +297,7 @@ export default function TickSheetFillPage() {
                 key={q.id}
                 title={q.title}
                 onClick={() => scrollToQuestion(q.id)}
-                className={`flex-1 w-full transition-colors duration-500 cursor-pointer hover:brightness-110 ${answered ? 'bg-green-500' : 'bg-red-500'}`}
+                className={`flex-1 w-full transition-colors duration-500 cursor-pointer hover:brightness-110 ${answered ? 'bg-green-500' : 'bg-red-400'}`}
               ></div>
             );
           })}
@@ -301,7 +306,7 @@ export default function TickSheetFillPage() {
 
       {/* MODAL: Description Pop-up */}
       {showDescModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200 pointer-events-auto">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200 pointer-events-auto">
           <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-200">
             <div className="p-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50/50 dark:bg-slate-800/80">
               <h3 className="font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
