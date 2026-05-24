@@ -184,13 +184,27 @@ export default function PastResponsesPage({ params }: { params: { id: string } }
         {/* Responses Section */}
         {showForm && (
           <section className="space-y-4 pb-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100">
-                Responses for {MOCK_USERS.find(u => u.id === selectedUserId)?.name}
-              </h3>
-              <span className="text-[13px] font-medium text-slate-500 bg-slate-200 dark:bg-slate-800 px-3 py-1 rounded-full">
-                {selectedDate}
-              </span>
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+              <div className="flex items-center gap-3">
+                <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100">
+                  Responses for {MOCK_USERS.find(u => u.id === selectedUserId)?.name}
+                </h3>
+                <span className="text-[13px] font-medium text-slate-500 bg-slate-200 dark:bg-slate-800 px-3 py-1 rounded-full">
+                  {selectedDate}
+                </span>
+              </div>
+              
+              {/* Search Box */}
+              <div className="relative w-full md:w-64">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <input 
+                  type="text" 
+                  placeholder="Search questions..." 
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl pl-9 pr-4 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-700 dark:text-slate-200 shadow-sm"
+                />
+              </div>
             </div>
 
             {/* Render Mock Questions */}
@@ -302,20 +316,6 @@ export default function PastResponsesPage({ params }: { params: { id: string } }
       {showForm && (
         <div className="fixed right-3 md:right-6 top-4 bottom-20 md:top-8 md:bottom-8 hidden md:flex flex-col items-end gap-3 pointer-events-none z-50">
           
-          {/* Search box — always visible on desktop, properly aligned */}
-          <div className="pointer-events-auto w-52 shadow-lg rounded-xl overflow-hidden bg-white/90 backdrop-blur-md dark:bg-slate-800/90 border border-slate-200/60 dark:border-slate-700/60">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-              <input 
-                type="text" 
-                placeholder="Search questions..." 
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-transparent pl-9 pr-4 py-2.5 text-sm font-medium focus:outline-none text-slate-700 dark:text-slate-200"
-              />
-            </div>
-          </div>
-
           {/* Floating Strip (Timeline) */}
           <div className="pointer-events-auto flex-1 w-2.5 md:w-3 rounded-full flex flex-col overflow-hidden shadow-md border border-slate-200/50 dark:border-slate-700/50 bg-white dark:bg-slate-800">
             {filteredQuestions.map((q) => (
