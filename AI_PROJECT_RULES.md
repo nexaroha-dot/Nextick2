@@ -108,3 +108,7 @@ This project is a large-scale SaaS-based Task, SOP, Ticksheet, Form Builder, Wor
 - **No Temporary Hacks:** Write production-ready code. Avoid "temporary hacks" or "TODO" workarounds unless explicitly told to build a quick prototype.
 - **Prefer Scalability:** Always choose the more scalable and robust architectural pattern, even if it requires slightly more initial setup.
 - **Future Expansion:** Keep future expansion in mind. Leave clean interfaces and hooks where future features are likely to be attached.
+
+## 15. Git Workflow & Synchronization Rules
+- **Always Pull Before Push:** Because this is a shared project with concurrent developers, you MUST run `git pull origin main` to fetch and merge the latest remote changes before attempting to push any local modifications. 
+- **Global Sync Principle:** The remote server and local environment must remain perfectly synchronized. If conflicts arise, resolve them according to standard Git timeline principles before committing and pushing.
