@@ -74,7 +74,7 @@ export default function PastResponsesPage({ params }: { params: { id: string } }
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link 
-              href="/tick-sheet" 
+              href="/tick-sheet?tab=past" 
               className="p-2 -ml-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 transition-colors"
             >
               <ArrowLeft className="w-5 h-5" />
@@ -172,11 +172,14 @@ export default function PastResponsesPage({ params }: { params: { id: string } }
 
             {/* Render Mock Questions */}
             {MOCK_PAST_RESPONSES.map((q, index) => (
-              <div key={q.id} className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200/50 dark:border-slate-700/50 p-6 transition-all hover:border-slate-300 dark:hover:border-slate-600 group relative">
+              <div key={q.id} className="bg-white/95 backdrop-blur-xl dark:bg-slate-800/95 border border-slate-200 dark:border-slate-700/50 rounded-2xl p-4 md:p-6 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)] dark:shadow-[0_2px_12px_-4px_rgba(0,0,0,0.2)] transition-all duration-500 relative">
+                
+                {/* Green left border indicator for answered past questions */}
+                <div className="absolute left-0 top-0 bottom-0 w-1.5 rounded-l-2xl transition-colors duration-300 bg-green-500"></div>
                 
                 <div className="flex items-start gap-4">
                   {/* Question Number Badge */}
-                  <div className="bg-slate-100 dark:bg-slate-700/50 text-slate-500 dark:text-slate-400 font-bold w-8 h-8 rounded-lg flex items-center justify-center shrink-0 mt-0.5 text-sm">
+                  <div className="bg-slate-100 dark:bg-slate-700/50 text-slate-500 dark:text-slate-400 font-bold w-8 h-8 rounded-lg flex items-center justify-center shrink-0 mt-0.5 text-sm ml-1.5 md:ml-0">
                     {index + 1}
                   </div>
                   
@@ -235,6 +238,16 @@ export default function PastResponsesPage({ params }: { params: { id: string } }
                     </div>
                   </div>
                 </div>
+
+                {/* Footer Section: End Date */}
+                <div className="mt-5 pl-0 md:pl-6 flex items-center justify-end">
+                  {/* Right Side Date */}
+                  <div className="flex items-center gap-1.5 font-semibold text-[11px] px-2.5 py-1.5 rounded-lg border bg-slate-50/80 dark:bg-slate-800/50 text-slate-400 dark:text-slate-500 border-slate-100 dark:border-slate-700/50">
+                    <Calendar className="w-3.5 h-3.5" />
+                    {selectedDate || 'Past Date'}
+                  </div>
+                </div>
+
               </div>
             ))}
 
@@ -257,6 +270,23 @@ export default function PastResponsesPage({ params }: { params: { id: string } }
           </section>
         )}
       </main>
+
+      {/* RIGHT FLOATING PANEL — Strip */}
+      {showForm && (
+        <div className="fixed right-3 md:right-6 top-4 bottom-20 md:top-8 md:bottom-8 hidden md:flex flex-col items-end gap-3 pointer-events-none z-50">
+          {/* Floating Strip (Timeline) */}
+          <div className="pointer-events-auto flex-1 w-2.5 md:w-3 rounded-full flex flex-col overflow-hidden shadow-md border border-slate-200/50 dark:border-slate-700/50 bg-white dark:bg-slate-800">
+            {MOCK_PAST_RESPONSES.map((q) => (
+              <div 
+                key={q.id}
+                title={q.title}
+                className="flex-1 w-full transition-colors duration-500 bg-green-500"
+              ></div>
+            ))}
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
