@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback, useRef, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { Layers, FileText, CheckSquare, Type, Hash, Image as ImageIcon, Video, List, LayoutDashboard, Inbox, Users, Megaphone, Puzzle, FolderKanban, Zap, Save, Play, GripVertical, Calendar, CalendarClock, Clock, ChevronUp, ChevronDown, Plus } from 'lucide-react';
+import { Layers, FileText, CheckSquare, Type, Hash, Image as ImageIcon, Video, List, LayoutDashboard, Inbox, Users, Megaphone, Puzzle, FolderKanban, Zap, Save, Play, GripVertical, Calendar, CalendarClock, Clock, ChevronUp, ChevronDown, Plus, Share2, Settings, HelpCircle, Globe, Lock } from 'lucide-react';
 import { ReactFlow, Background, Controls, addEdge, applyNodeChanges, applyEdgeChanges, useReactFlow, ReactFlowProvider } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import QuestionNode from '@/components/QuestionNode';
@@ -379,6 +379,11 @@ function QuestionnaireBuilder() {
   const [isSaving, setIsSaving] = useState(false);
   const [activeMobileTab, setActiveMobileTab] = useState('questions'); // questions, settings, preview
 
+  // Share Modal State
+  const [showSharePopup, setShowSharePopup] = useState(false);
+  const [shareEmail, setShareEmail] = useState('');
+  const [shareAccessLevel, setShareAccessLevel] = useState('Editor');
+
   const [scheduleType, setScheduleType] = useState('Daily');
   const [scheduleExceptions, setScheduleExceptions] = useState<string[]>([]);
   const [scheduleOccurrences, setScheduleOccurrences] = useState<string[]>(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']);
@@ -662,6 +667,17 @@ function QuestionnaireBuilder() {
 
       {/* DESKTOP CANVAS */}
       <main className="hidden md:block flex-1 relative" ref={reactFlowWrapper}>
+        
+        {/* Share Button (Top Right corner of canvas, left of mobile preview) */}
+        <div className="absolute top-4 right-4 z-[60]">
+          <button 
+            onClick={() => setShowSharePopup(true)} 
+            className="flex items-center gap-2 bg-[#C2E7FF] hover:bg-[#A8DDFD] dark:bg-blue-900 dark:hover:bg-blue-800 text-[#001D35] dark:text-blue-100 px-5 py-2.5 rounded-full text-sm font-medium transition-all shadow-sm active:scale-95 border border-[#C2E7FF]/50"
+          >
+            <Share2 className="w-4 h-4" /> Share
+          </button>
+        </div>
+
         <ReactFlow
           nodes={nodes}
           edges={edges}
