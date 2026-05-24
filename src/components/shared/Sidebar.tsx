@@ -26,7 +26,7 @@ const navigation = [
   { name: "Settings", href: "/settings", icon: Settings },
 ];
 
-export default function Sidebar({ session }: { session: any }) {
+export default function Sidebar({ session }: { session?: any }) {
   const pathname = usePathname();
   const [showMobileProfile, setShowMobileProfile] = useState(false);
 
