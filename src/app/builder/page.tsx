@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback, useRef, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { Layers, FileText, CheckSquare, Type, Hash, Image as ImageIcon, Video, List, LayoutDashboard, Inbox, Users, Megaphone, Puzzle, FolderKanban, Zap, Save, Play, GripVertical, Calendar, CalendarClock, Clock, ChevronUp, ChevronDown, Plus, Share2, Settings, HelpCircle, Globe, Lock } from 'lucide-react';
+import { Layers, FileText, CheckSquare, Type, Hash, Image as ImageIcon, Video, List, LayoutDashboard, Inbox, Users, Megaphone, Puzzle, FolderKanban, Zap, Save, Play, GripVertical, Calendar, CalendarClock, Clock, ChevronUp, ChevronDown, Plus, Share2, Settings, HelpCircle, Globe, Lock, ArrowLeft, X, Link } from 'lucide-react';
 import { ReactFlow, Background, Controls, addEdge, applyNodeChanges, applyEdgeChanges, useReactFlow, ReactFlowProvider } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import QuestionNode from '@/components/QuestionNode';
@@ -381,8 +381,15 @@ function QuestionnaireBuilder() {
 
   // Share Modal State
   const [showSharePopup, setShowSharePopup] = useState(false);
-  const [shareEmail, setShareEmail] = useState('');
-  const [shareAccessLevel, setShareAccessLevel] = useState('Editor');
+  const [isInviteMode, setIsInviteMode] = useState(false);
+  const [inviteEmail, setInviteEmail] = useState('');
+  const [inviteRole, setInviteRole] = useState('Editor');
+  const [notifyPeople, setNotifyPeople] = useState(true);
+  const [inviteMessage, setInviteMessage] = useState('');
+  const [emailChip, setEmailChip] = useState('');
+  const [sharedUsers, setSharedUsers] = useState<any[]>([
+    { email: 'rajraval22542@gmail.com', name: 'Mayur Raval (you)', role: 'Owner', isOwner: true, color: 'bg-[#1A73E8]', initial: 'M' }
+  ]);
 
   const [scheduleType, setScheduleType] = useState('Daily');
   const [scheduleExceptions, setScheduleExceptions] = useState<string[]>([]);
@@ -890,102 +897,229 @@ function QuestionnaireBuilder() {
 
       {/* SHARE MODAL (Google Docs Style) */}
       {showSharePopup && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-slate-800 rounded-[28px] shadow-2xl w-full max-w-[520px] overflow-hidden flex flex-col animate-in zoom-in-95 duration-200">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/40 p-4 animate-in fade-in duration-200">
+          <div className="bg-white dark:bg-slate-800 rounded-[16px] shadow-2xl w-full max-w-[550px] overflow-hidden flex flex-col animate-in zoom-in-95 duration-200 min-h-[400px]">
             {/* Header */}
-            <div className="px-6 pt-6 pb-4 flex items-center justify-between">
-              <h2 className="text-xl font-normal text-slate-800 dark:text-slate-100 truncate pr-4">Share "{questionnaireTitle || 'Untitled Ticksheet'}"</h2>
-              <div className="flex items-center gap-2 shrink-0">
-                <button className="text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700 p-2 rounded-full transition-colors"><HelpCircle className="w-5 h-5" /></button>
-                <button className="text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700 p-2 rounded-full transition-colors"><Settings className="w-5 h-5" /></button>
+            <div className="px-5 pt-5 pb-3 flex items-center justify-between">
+              <h2 className="text-[22px] font-normal text-slate-800 dark:text-slate-100 truncate pr-4">
+                {isInviteMode ? (
+                  <div className="flex items-center gap-3">
+                    <button onClick={() => setIsInviteMode(false)} className="text-slate-600 hover:bg-slate-100 p-2 -ml-2 rounded-full transition-colors"><ArrowLeft className="w-5 h-5" /></button>
+                    <span>Share "{questionnaireTitle || 'Untitled Ticksheet'}"</span>
+                  </div>
+                ) : (
+                  <span>Share "{questionnaireTitle || 'Untitled Ticksheet'}"</span>
+                )}
+              </h2>
+              <div className="flex items-center gap-1 shrink-0">
+                <button className="text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 p-2 rounded-full transition-colors"><HelpCircle className="w-5 h-5" /></button>
+                <button className="text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 p-2 rounded-full transition-colors"><Settings className="w-5 h-5" /></button>
               </div>
             </div>
 
-            {/* Content */}
-            <div className="px-6 space-y-6 pb-6">
-              {/* Input Area */}
-              <div className={`relative border rounded-xl p-1.5 transition-all flex flex-col sm:flex-row items-stretch sm:items-center ${shareEmail ? 'border-blue-500 shadow-[0_0_0_1px_rgba(59,130,246,1)]' : 'border-slate-300 dark:border-slate-600 hover:border-slate-400'}`}>
-                <input 
-                  type="text" 
-                  placeholder="Add people, groups, spaces and calendar events"
-                  className="w-full bg-transparent p-2.5 text-[15px] focus:outline-none text-slate-800 dark:text-slate-200 placeholder:text-slate-500"
-                  value={shareEmail}
-                  onChange={(e) => setShareEmail(e.target.value)}
-                />
-                {shareEmail && (
-                  <div className="flex items-center gap-2 pr-1 pb-1 sm:pb-0 shrink-0 self-end sm:self-auto">
+            {/* List Mode Content */}
+            {!isInviteMode && (
+              <div className="px-5 space-y-6 pb-4">
+                {/* Fake Input */}
+                <div 
+                  className="border border-slate-300 dark:border-slate-600 rounded-[4px] p-0.5 hover:border-slate-800 cursor-text flex items-center transition-colors"
+                  onClick={() => setIsInviteMode(true)}
+                >
+                  <input 
+                    type="text" 
+                    placeholder="Add people, groups, spaces and calendar events"
+                    className="w-full bg-transparent p-2.5 text-[14px] focus:outline-none text-slate-800 placeholder:text-slate-600 pointer-events-none"
+                    readOnly
+                  />
+                </div>
+
+                {/* People with access */}
+                <div>
+                  <h3 className="text-[14px] font-medium text-slate-800 dark:text-slate-200 mb-3">People with access</h3>
+                  <div className="space-y-1">
+                    {sharedUsers.map(user => (
+                      <div key={user.email} className="flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-700/50 p-2 -mx-2 rounded-lg transition-colors group/user">
+                        <div className="flex items-center gap-3">
+                          <div className={`w-[36px] h-[36px] rounded-full ${user.color} text-white flex items-center justify-center font-semibold text-[15px] shrink-0`}>
+                            {user.initial}
+                          </div>
+                          <div className="flex flex-col justify-center">
+                            <p className="text-[14px] font-medium text-slate-800 dark:text-slate-200 leading-tight">{user.name}</p>
+                            <p className="text-[12px] text-slate-500 mt-0.5">{user.email}</p>
+                          </div>
+                        </div>
+                        {user.isOwner ? (
+                          <span className="text-[13px] text-slate-500 font-medium pr-2">Owner</span>
+                        ) : (
+                          <div className="relative flex items-center">
+                            <select 
+                              className="appearance-none bg-transparent text-[14px] text-slate-600 font-medium focus:outline-none cursor-pointer pr-6 py-1"
+                              value={user.role}
+                              onChange={(e) => {
+                                if(e.target.value === 'Remove access') {
+                                  setSharedUsers(prev => prev.filter(u => u.email !== user.email));
+                                } else {
+                                  setSharedUsers(prev => prev.map(u => u.email === user.email ? { ...u, role: e.target.value } : u));
+                                }
+                              }}
+                            >
+                              <option value="Viewer">Viewer</option>
+                              <option value="Commenter">Commenter</option>
+                              <option value="Editor">Editor</option>
+                              <option disabled>──────────</option>
+                              <option value="Transfer ownership">Transfer ownership</option>
+                              <option value="Remove access">Remove access</option>
+                            </select>
+                            <ChevronDown className="w-3.5 h-3.5 absolute right-1 pointer-events-none text-slate-600" />
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Invite Mode Content */}
+            {isInviteMode && (
+              <div className="px-5 space-y-5 pb-4 flex-1">
+                {/* Email Input & Role */}
+                <div className="flex items-start gap-3">
+                  <div className={`flex-1 border rounded-[4px] p-1 flex flex-wrap gap-1 items-center min-h-[46px] transition-all ${emailChip ? 'border-slate-300' : 'border-blue-600 shadow-[0_0_0_1px_rgba(37,99,235,1)]'}`}>
+                    {emailChip ? (
+                      <div className="flex items-center gap-1.5 bg-[#C2E7FF]/50 border border-[#A8DDFD] rounded-full pl-1.5 pr-2.5 py-0.5 m-1">
+                          <div className="w-5 h-5 rounded-full bg-[#007b83] text-white flex items-center justify-center text-[10px] font-bold">
+                            {emailChip.charAt(0).toUpperCase()}
+                          </div>
+                          <span className="text-[13px] font-medium text-[#001D35]">{emailChip}</span>
+                          <button className="text-slate-500 hover:text-slate-700 ml-1" onClick={() => setEmailChip('')}><X className="w-3.5 h-3.5" /></button>
+                      </div>
+                    ) : (
+                      <input 
+                        autoFocus
+                        type="text" 
+                        placeholder="Add people, groups, spaces and calendar events"
+                        className="flex-1 bg-transparent p-2 text-[14px] focus:outline-none min-w-[150px] text-slate-800 placeholder:text-slate-500"
+                        value={inviteEmail}
+                        onChange={e => setInviteEmail(e.target.value)}
+                        onKeyDown={(e) => {
+                          if(e.key === 'Enter' || e.key === 'Tab' || e.key === ' ' || e.key === ',') {
+                            e.preventDefault();
+                            if(inviteEmail.trim()) {
+                              setEmailChip(inviteEmail.trim());
+                              setInviteEmail('');
+                            }
+                          }
+                        }}
+                        onBlur={() => {
+                          if(inviteEmail.trim() && !emailChip) {
+                            setEmailChip(inviteEmail.trim());
+                            setInviteEmail('');
+                          }
+                        }}
+                      />
+                    )}
+                  </div>
+                  <div className="relative flex items-center bg-slate-50 hover:bg-slate-100 rounded-[4px] border border-transparent mt-1">
                     <select 
-                      className="bg-transparent text-[13px] text-slate-600 dark:text-slate-300 font-medium focus:outline-none cursor-pointer p-1.5 rounded hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors appearance-none"
-                      value={shareAccessLevel}
-                      onChange={(e) => setShareAccessLevel(e.target.value)}
+                      className="appearance-none bg-transparent text-[14px] text-slate-700 font-medium focus:outline-none cursor-pointer pl-3 pr-8 py-2"
+                      value={inviteRole}
+                      onChange={(e) => setInviteRole(e.target.value)}
                     >
                       <option value="Viewer">Viewer</option>
-                      <option value="Responder">Responder</option>
+                      <option value="Commenter">Commenter</option>
                       <option value="Editor">Editor</option>
                     </select>
-                    <button 
-                      className="bg-[#0B57D0] hover:bg-[#0842A0] text-white px-5 py-2 rounded-full text-sm font-medium transition-all active:scale-95"
-                      onClick={() => {
-                        alert(`Invitation sent to ${shareEmail} as ${shareAccessLevel}`);
-                        setShareEmail('');
-                      }}
-                    >
-                      Send
-                    </button>
+                    <ChevronDown className="w-4 h-4 absolute right-2 pointer-events-none text-slate-600" />
                   </div>
-                )}
-              </div>
+                </div>
 
-              {/* People with access */}
-              <div>
-                <h3 className="text-[13px] font-medium text-slate-600 dark:text-slate-400 mb-3 px-1">People with access</h3>
-                <div className="flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-700/50 p-2 -mx-2 rounded-lg transition-colors">
+                {/* Notify & Message */}
+                <div className="space-y-4 px-1">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-[#1A73E8] text-white flex items-center justify-center font-bold text-lg shrink-0">
-                      M
-                    </div>
-                    <div>
-                      <p className="text-[14px] font-semibold text-slate-800 dark:text-slate-200 leading-tight">Mayur Raval (you)</p>
-                      <p className="text-[12px] text-slate-500 mt-0.5">rajraval22542@gmail.com</p>
-                    </div>
+                    <input 
+                      type="checkbox" 
+                      id="notify" 
+                      checked={notifyPeople} 
+                      onChange={e => setNotifyPeople(e.target.checked)} 
+                      className="w-[18px] h-[18px] text-[#0B57D0] rounded-[2px] border-slate-400 focus:ring-0 cursor-pointer accent-[#0B57D0]"
+                    />
+                    <label htmlFor="notify" className="text-[14px] text-slate-800 cursor-pointer select-none">Notify people</label>
                   </div>
-                  <span className="text-[13px] text-slate-500 font-medium pr-2">Owner</span>
+                  {notifyPeople && (
+                    <textarea 
+                      placeholder="Message"
+                      className="w-full border border-slate-300 rounded-[4px] p-3 text-[14px] min-h-[120px] focus:outline-none focus:border-blue-600 focus:shadow-[0_0_0_1px_rgba(37,99,235,1)] text-slate-800 resize-none"
+                      value={inviteMessage}
+                      onChange={e => setInviteMessage(e.target.value)}
+                    />
+                  )}
                 </div>
               </div>
+            )}
 
-              {/* General Access */}
-              <div className="pt-2">
-                <h3 className="text-[13px] font-medium text-slate-600 dark:text-slate-400 mb-3 px-1">General access</h3>
-                <div className="flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-700/50 p-2 -mx-2 rounded-lg transition-colors cursor-pointer group">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 shrink-0 group-hover:bg-slate-200 dark:group-hover:bg-slate-600 transition-colors">
-                      <Lock className="w-5 h-5" />
-                    </div>
-                    <div className="flex flex-col">
-                      <select className="bg-transparent text-[14px] font-semibold text-slate-800 dark:text-slate-200 focus:outline-none cursor-pointer appearance-none -ml-1 pl-1">
-                        <option value="Restricted">Restricted</option>
-                        <option value="Anyone">Anyone with the link</option>
-                      </select>
-                      <p className="text-[12px] text-slate-500 mt-0.5">Only people with access can open with the link</p>
-                    </div>
-                  </div>
-                  <ChevronDown className="w-4 h-4 text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+            {/* List Mode Footer */}
+            {!isInviteMode && (
+              <div className="px-5 py-4 flex items-center justify-between mt-auto">
+                <button className="text-slate-700 font-medium text-[14px] hover:bg-slate-100 px-3 py-2 rounded-full transition-colors flex items-center gap-2">
+                  <Link className="w-4 h-4" /> Copy link
+                </button>
+                <button 
+                  onClick={() => setShowSharePopup(false)}
+                  className="text-[#0B57D0] hover:bg-[#C2E7FF]/50 px-6 py-2.5 rounded-full text-[14px] font-medium transition-colors"
+                >
+                  Done
+                </button>
+              </div>
+            )}
+
+            {/* Invite Mode Footer */}
+            {isInviteMode && (
+              <div className="px-5 py-4 flex items-center justify-between mt-auto">
+                <button className="text-slate-700 font-medium text-[14px] hover:bg-slate-100 px-3 py-2 rounded-full transition-colors flex items-center gap-2">
+                  <Link className="w-4 h-4" /> Copy link
+                </button>
+                <div className="flex items-center gap-2">
+                  <button 
+                    onClick={() => {
+                      setIsInviteMode(false);
+                      setEmailChip('');
+                      setInviteEmail('');
+                    }}
+                    className="text-[#0B57D0] hover:bg-[#C2E7FF]/50 px-5 py-2.5 rounded-full text-[14px] font-medium transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button 
+                    onClick={() => {
+                      const emailToInvite = emailChip || inviteEmail.trim();
+                      if(emailToInvite) {
+                        setSharedUsers(prev => {
+                          const existing = prev.find(u => u.email === emailToInvite);
+                          if(existing) return prev;
+                          return [...prev, {
+                            email: emailToInvite,
+                            name: emailToInvite,
+                            role: inviteRole,
+                            isOwner: false,
+                            color: 'bg-[#8E24AA]',
+                            initial: emailToInvite.charAt(0).toUpperCase()
+                          }];
+                        });
+                      }
+                      setIsInviteMode(false);
+                      setEmailChip('');
+                      setInviteEmail('');
+                      setInviteMessage('');
+                    }}
+                    className="bg-[#0B57D0] hover:bg-[#0842A0] text-white px-6 py-2.5 rounded-full text-[14px] font-medium transition-colors disabled:opacity-50"
+                    disabled={!emailChip && !inviteEmail.trim()}
+                  >
+                    Send
+                  </button>
                 </div>
               </div>
-            </div>
-
-            {/* Footer */}
-            <div className="px-6 py-5 flex items-center justify-between">
-              <button className="text-[#0B57D0] dark:text-[#A8DDFD] font-semibold text-sm hover:bg-blue-50 dark:hover:bg-blue-900/30 px-5 py-2.5 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 transition-all active:scale-95 flex items-center gap-2">
-                <Globe className="w-4 h-4" /> Copy link
-              </button>
-              <button 
-                onClick={() => setShowSharePopup(false)}
-                className="bg-[#0B57D0] hover:bg-[#0842A0] text-white px-6 py-2.5 rounded-full text-sm font-medium transition-all active:scale-95 shadow-sm"
-              >
-                Done
-              </button>
-            </div>
+            )}
           </div>
         </div>
       )}
