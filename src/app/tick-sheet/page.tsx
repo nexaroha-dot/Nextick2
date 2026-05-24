@@ -103,8 +103,10 @@ export default function TickSheetModulePage() {
               key={sheet._id} 
               href={sheet.status === 'past' ? `/tick-sheet/past/${sheet._id}` : `/tick-sheet/fill/${sheet._id}`}
               className="block group"
-            >  
+            >
               <div className="glass-panel border border-slate-200/50 dark:border-slate-700/50 rounded-2xl p-6 hover:border-blue-500/50 hover:shadow-xl transition-all duration-300 group flex flex-col relative cursor-pointer overflow-hidden bg-white/60 dark:bg-slate-900/60 shadow-sm h-full">
+                {/* Green left border indicator for today cards */}
+                {sheet.status === 'today' && <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-green-500"></div>}
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-400 to-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 
                 <div className="flex justify-between items-start mb-6">
