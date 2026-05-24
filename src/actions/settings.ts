@@ -2,13 +2,12 @@
 
 import { revalidatePath } from "next/cache";
 import { getSession } from "@/services/auth/session";
-import { createSupabaseServerClient } from "@/services/supabase/client";
+import { supabase } from "@/services/supabase/client";
 
 export async function getBranches() {
   const session = await getSession();
   if (!session || !session.company_lic) return [];
 
-  const supabase = createSupabaseServerClient();
   const { data, error } = await supabase
     .from("branch")
     .select("*")
@@ -33,7 +32,6 @@ export async function addBranch(prevState: any, formData: FormData) {
     return { error: "Branch name is required" };
   }
 
-  const supabase = createSupabaseServerClient();
   const { error } = await supabase
     .from("branch")
     .insert([
@@ -56,7 +54,6 @@ export async function getDepartments() {
   const session = await getSession();
   if (!session || !session.company_lic) return [];
 
-  const supabase = createSupabaseServerClient();
   const { data, error } = await supabase
     .from("department")
     .select("*")
@@ -81,7 +78,6 @@ export async function addDepartment(prevState: any, formData: FormData) {
     return { error: "Department name is required" };
   }
 
-  const supabase = createSupabaseServerClient();
   const { error } = await supabase
     .from("department")
     .insert([
