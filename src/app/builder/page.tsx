@@ -387,6 +387,7 @@ function QuestionnaireBuilder() {
   const [notifyPeople, setNotifyPeople] = useState(true);
   const [inviteMessage, setInviteMessage] = useState('');
   const [emailChip, setEmailChip] = useState('');
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [sharedUsers, setSharedUsers] = useState<any[]>([
     { email: 'rajraval22542@gmail.com', name: 'Mayur Raval (you)', role: 'Owner', isOwner: true, color: 'bg-[#1A73E8]', initial: 'M' }
   ]);
@@ -898,7 +899,7 @@ function QuestionnaireBuilder() {
       {/* SHARE MODAL (Google Docs Style) */}
       {showSharePopup && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/40 p-4 animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-slate-800 rounded-[16px] shadow-2xl w-full max-w-[550px] overflow-hidden flex flex-col animate-in zoom-in-95 duration-200 min-h-[400px]">
+          <div className="bg-white dark:bg-slate-800 rounded-[16px] shadow-2xl w-full max-w-[480px] overflow-hidden flex flex-col animate-in zoom-in-95 duration-200 min-h-[400px]">
             {/* Header */}
             <div className="px-5 pt-5 pb-3 flex items-center justify-between">
               <h2 className="text-[22px] font-normal text-slate-800 dark:text-slate-100 truncate pr-4">
@@ -951,26 +952,23 @@ function QuestionnaireBuilder() {
                         {user.isOwner ? (
                           <span className="text-[13px] text-slate-500 font-medium pr-2">Owner</span>
                         ) : (
-                          <div className="relative flex items-center">
-                            <select 
-                              className="appearance-none bg-transparent text-[14px] text-slate-600 font-medium focus:outline-none cursor-pointer pr-6 py-1"
-                              value={user.role}
-                              onChange={(e) => {
-                                if(e.target.value === 'Remove access') {
-                                  setSharedUsers(prev => prev.filter(u => u.email !== user.email));
-                                } else {
-                                  setSharedUsers(prev => prev.map(u => u.email === user.email ? { ...u, role: e.target.value } : u));
-                                }
-                              }}
+                          <div className="relative">
+                            <button 
+                              className="flex items-center gap-2 text-[14px] text-slate-600 font-medium hover:bg-slate-100 dark:hover:bg-slate-700 px-2 py-1 rounded-md transition-colors"
+                              onClick={() => setOpenDropdown(openDropdown === user.email ? null : user.email)}
                             >
-                              <option value="Viewer">Viewer</option>
-                              <option value="Commenter">Commenter</option>
-                              <option value="Editor">Editor</option>
-                              <option disabled>──────────</option>
-                              <option value="Transfer ownership">Transfer ownership</option>
-                              <option value="Remove access">Remove access</option>
-                            </select>
-                            <ChevronDown className="w-3.5 h-3.5 absolute right-1 pointer-events-none text-slate-600" />
+                              {user.role} <ChevronDown className="w-4 h-4 text-slate-500" />
+                            </button>
+                            {openDropdown === user.email && (
+                              <div className="absolute right-0 top-full mt-1 w-[200px] bg-white dark:bg-slate-800 rounded-md shadow-xl border border-slate-200 dark:border-slate-700 py-1.5 z-50">
+                                <button onClick={() => { setSharedUsers(prev => prev.map(u => u.email === user.email ? { ...u, role: 'Viewer' } : u)); setOpenDropdown(null); }} className="w-full text-left px-4 py-2 text-[14px] text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700">Viewer</button>
+                                <button onClick={() => { setSharedUsers(prev => prev.map(u => u.email === user.email ? { ...u, role: 'Commenter' } : u)); setOpenDropdown(null); }} className="w-full text-left px-4 py-2 text-[14px] text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700">Commenter</button>
+                                <button onClick={() => { setSharedUsers(prev => prev.map(u => u.email === user.email ? { ...u, role: 'Editor' } : u)); setOpenDropdown(null); }} className="w-full text-left px-4 py-2 text-[14px] text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center justify-between">Editor {user.role === 'Editor' && <CheckSquare className="w-4 h-4 text-blue-600" />}</button>
+                                <div className="h-px bg-slate-200 dark:bg-slate-700 my-1.5"></div>
+                                <button onClick={() => { setSharedUsers(prev => prev.map(u => u.email === user.email ? { ...u, role: 'Owner', isOwner: true } : { ...u, isOwner: false })); setOpenDropdown(null); }} className="w-full text-left px-4 py-2 text-[14px] text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700">Transfer ownership</button>
+                                <button onClick={() => { setSharedUsers(prev => prev.filter(u => u.email !== user.email)); setOpenDropdown(null); }} className="w-full text-left px-4 py-2 text-[14px] text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700">Remove access</button>
+                              </div>
+                            )}
                           </div>
                         )}
                       </div>
@@ -1021,16 +1019,19 @@ function QuestionnaireBuilder() {
                     )}
                   </div>
                   <div className="relative flex items-center bg-slate-50 hover:bg-slate-100 rounded-[4px] border border-transparent mt-1">
-                    <select 
-                      className="appearance-none bg-transparent text-[14px] text-slate-700 font-medium focus:outline-none cursor-pointer pl-3 pr-8 py-2"
-                      value={inviteRole}
-                      onChange={(e) => setInviteRole(e.target.value)}
+                    <button 
+                      className="flex items-center gap-1.5 text-[14px] text-slate-700 font-medium focus:outline-none cursor-pointer pl-3 pr-2 py-2"
+                      onClick={() => setOpenDropdown(openDropdown === 'inviteRole' ? null : 'inviteRole')}
                     >
-                      <option value="Viewer">Viewer</option>
-                      <option value="Commenter">Commenter</option>
-                      <option value="Editor">Editor</option>
-                    </select>
-                    <ChevronDown className="w-4 h-4 absolute right-2 pointer-events-none text-slate-600" />
+                      {inviteRole} <ChevronDown className="w-4 h-4 text-slate-600" />
+                    </button>
+                    {openDropdown === 'inviteRole' && (
+                      <div className="absolute right-0 top-full mt-1 w-[140px] bg-white dark:bg-slate-800 rounded-md shadow-xl border border-slate-200 dark:border-slate-700 py-1.5 z-50">
+                        <button onClick={() => { setInviteRole('Viewer'); setOpenDropdown(null); }} className="w-full text-left px-4 py-2 text-[14px] text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700">Viewer</button>
+                        <button onClick={() => { setInviteRole('Commenter'); setOpenDropdown(null); }} className="w-full text-left px-4 py-2 text-[14px] text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700">Commenter</button>
+                        <button onClick={() => { setInviteRole('Editor'); setOpenDropdown(null); }} className="w-full text-left px-4 py-2 text-[14px] text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center justify-between">Editor {inviteRole === 'Editor' && <CheckSquare className="w-4 h-4 text-blue-600" />}</button>
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -1060,10 +1061,7 @@ function QuestionnaireBuilder() {
 
             {/* List Mode Footer */}
             {!isInviteMode && (
-              <div className="px-5 py-4 flex items-center justify-between mt-auto">
-                <button className="text-slate-700 font-medium text-[14px] hover:bg-slate-100 px-3 py-2 rounded-full transition-colors flex items-center gap-2">
-                  <Link className="w-4 h-4" /> Copy link
-                </button>
+              <div className="px-5 py-4 flex items-center justify-end mt-auto">
                 <button 
                   onClick={() => setShowSharePopup(false)}
                   className="text-[#0B57D0] hover:bg-[#C2E7FF]/50 px-6 py-2.5 rounded-full text-[14px] font-medium transition-colors"
@@ -1075,10 +1073,7 @@ function QuestionnaireBuilder() {
 
             {/* Invite Mode Footer */}
             {isInviteMode && (
-              <div className="px-5 py-4 flex items-center justify-between mt-auto">
-                <button className="text-slate-700 font-medium text-[14px] hover:bg-slate-100 px-3 py-2 rounded-full transition-colors flex items-center gap-2">
-                  <Link className="w-4 h-4" /> Copy link
-                </button>
+              <div className="px-5 py-4 flex items-center justify-end mt-auto">
                 <div className="flex items-center gap-2">
                   <button 
                     onClick={() => {
