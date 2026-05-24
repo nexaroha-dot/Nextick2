@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { CheckSquare, FileText } from 'lucide-react';
+import { CheckSquare, FileText, Clock } from 'lucide-react';
 import Link from 'next/link';
 
 export default function TickSheetModulePage() {
@@ -13,37 +13,43 @@ export default function TickSheetModulePage() {
       _id: 't1',
       title: 'Daily Machine Checklist',
       status: 'today',
-      date: 'Active'
+      date: 'Active',
+      endDate: 'Ends Today, 11:59 PM'
     },
     {
       _id: 't2',
       title: 'Site Safety Audit',
       status: 'today',
-      date: 'Active'
+      date: 'Active',
+      endDate: 'Ends Today, 06:00 PM'
     },
     {
       _id: 't3',
       title: 'End of Shift Compliance',
       status: 'today',
-      date: 'Active'
+      date: 'Active',
+      endDate: 'Ends Today, 10:00 PM'
     },
     {
       _id: 'p1',
       title: 'Weekly Maintenance Log',
       status: 'past',
-      date: '21/05/2026'
+      date: '21/05/2026',
+      endDate: 'Ended 21/05/2026'
     },
     {
       _id: 'p2',
       title: 'Inventory Verification',
       status: 'past',
-      date: '20/05/2026'
+      date: '20/05/2026',
+      endDate: 'Ended 20/05/2026'
     },
     {
       _id: 'p3',
       title: 'Incident Report Form',
       status: 'past',
-      date: '18/05/2026'
+      date: '18/05/2026',
+      endDate: 'Ended 18/05/2026'
     }
   ];
 
@@ -98,6 +104,12 @@ export default function TickSheetModulePage() {
                   <div className="bg-blue-50 dark:bg-blue-900/30 p-3 rounded-xl group-hover:scale-110 transition-transform">
                     <FileText className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                   </div>
+                  {sheet.status === 'today' && (
+                    <div className="flex items-center gap-1.5 px-2.5 py-1 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-full text-[10px] font-bold border border-red-100 dark:border-red-800">
+                      <Clock className="w-3 h-3" />
+                      {sheet.endDate}
+                    </div>
+                  )}
                 </div>
                 
                 <div className="flex-1">
@@ -123,3 +135,4 @@ export default function TickSheetModulePage() {
     </div>
   );
 }
+
