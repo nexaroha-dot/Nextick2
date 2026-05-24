@@ -8,7 +8,7 @@ export default function ClientLayoutWrapper({
   session 
 }: { 
   children: React.ReactNode, 
-  session: any 
+  session?: any 
 }) {
   const pathname = usePathname();
   const isAuthPage = pathname === '/login' || pathname === '/signup';
