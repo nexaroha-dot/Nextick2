@@ -104,12 +104,6 @@ export default function TickSheetModulePage() {
                   <div className="bg-blue-50 dark:bg-blue-900/30 p-3 rounded-xl group-hover:scale-110 transition-transform">
                     <FileText className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                   </div>
-                  {sheet.status === 'today' && (
-                    <div className="flex items-center gap-1.5 px-2.5 py-1 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-full text-[10px] font-bold border border-red-100 dark:border-red-800">
-                      <Clock className="w-3 h-3" />
-                      {sheet.endDate}
-                    </div>
-                  )}
                 </div>
                 
                 <div className="flex-1">
