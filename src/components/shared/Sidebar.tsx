@@ -184,11 +184,11 @@ export default function Sidebar({ session }: { session?: any }) {
           );
         })}
         
-        {/* Mobile Settings Link to root settings page (or branch by default) */}
+        {/* Mobile Settings Link to root settings page */}
         <Link
-          href="/settings/branch"
+          href="/settings"
           className={`flex flex-col items-center justify-center gap-1 w-14 h-12 rounded-xl transition-all duration-300 active:scale-95 ${
-            pathname.startsWith("/settings")
+            pathname === "/settings" || pathname.startsWith("/settings/")
               ? "text-blue-600 dark:text-blue-400 font-semibold"
               : "text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400"
           }`}
