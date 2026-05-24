@@ -278,7 +278,6 @@ export default function PastResponsesPage({ params }: { params: { id: string } }
                       )}
                     </div>
                   </div>
-                </div>
 
                 {/* Footer Section: End Date */}
                 <div className="mt-4 pl-0 md:pl-6 flex justify-end">
