@@ -50,9 +50,32 @@ export default function PastResponsesPage({ params }: { params: { id: string } }
   const [selectedDate, setSelectedDate] = useState('');
   const [showForm, setShowForm] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [answers, setAnswers] = useState<Record<string, any>>({});
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const isAnswered = (id: string) => {
+    const val = answers[id];
+    if (Array.isArray(val)) return val.length > 0;
+    if (typeof val === 'string') return val.trim().length > 0;
+    return val !== undefined && val !== null && val !== '';
+  };
+
+  const handleAnswerChange = (id: string, value: any) => {
+    if (userRole !== 'Editor') return;
+    setAnswers(prev => ({ ...prev, [id]: value }));
+  };
+
+  const filteredQuestions = MOCK_PAST_RESPONSES.filter(q => 
+    q.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const handleSearch = () => {
     if (selectedUserId && selectedDate) {
+      const initialAnswers: Record<string, any> = {};
+      MOCK_PAST_RESPONSES.forEach(q => {
+        initialAnswers[q.id] = q.answer;
+      });
+      setAnswers(initialAnswers);
       setShowForm(true);
     } else {
       alert('Please select both User and Date first.');
@@ -171,11 +194,11 @@ export default function PastResponsesPage({ params }: { params: { id: string } }
             </div>
 
             {/* Render Mock Questions */}
-            {MOCK_PAST_RESPONSES.map((q, index) => (
-              <div key={q.id} className="bg-white/95 backdrop-blur-xl dark:bg-slate-800/95 border border-slate-200 dark:border-slate-700/50 rounded-2xl p-4 md:p-6 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)] dark:shadow-[0_2px_12px_-4px_rgba(0,0,0,0.2)] transition-all duration-500 relative">
+            {filteredQuestions.map((q, index) => (
+              <div key={q.id} id={`question-${q.id}`} className="bg-white/95 backdrop-blur-xl dark:bg-slate-800/95 border border-slate-200 dark:border-slate-700/50 rounded-2xl p-4 md:p-6 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)] dark:shadow-[0_2px_12px_-4px_rgba(0,0,0,0.2)] transition-all duration-500 relative">
                 
                 {/* Green left border indicator for answered past questions */}
-                <div className="absolute left-0 top-0 bottom-0 w-1.5 rounded-l-2xl transition-colors duration-300 bg-green-500"></div>
+                <div className={`absolute left-0 top-0 bottom-0 w-1.5 rounded-l-2xl transition-colors duration-300 ${isAnswered(q.id) ? 'bg-green-500' : 'bg-red-400'}`}></div>
                 
                 <div className="flex items-start gap-4">
                   {/* Question Number Badge */}
@@ -200,9 +223,11 @@ export default function PastResponsesPage({ params }: { params: { id: string } }
                       {q.type === 'Dropdown' && (
                         <select 
                           className="w-full p-3 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl text-[14px] text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-70 disabled:cursor-not-allowed disabled:bg-slate-100 dark:disabled:bg-slate-800"
-                          defaultValue={q.answer}
+                          value={answers[q.id] || ''}
+                          onChange={(e) => handleAnswerChange(q.id, e.target.value)}
                           disabled={userRole !== 'Editor'}
                         >
+                          <option value="">Select an option...</option>
                           <option value="Operational">Operational</option>
                           <option value="Under Maintenance">Under Maintenance</option>
                           <option value="Offline">Offline</option>
@@ -217,7 +242,8 @@ export default function PastResponsesPage({ params }: { params: { id: string } }
                                 type="radio" 
                                 name={`q_${q.id}`} 
                                 value={opt} 
-                                defaultChecked={q.answer === opt}
+                                checked={answers[q.id] === opt}
+                                onChange={(e) => handleAnswerChange(q.id, e.target.value)}
                                 disabled={userRole !== 'Editor'}
                                 className="w-4 h-4 text-blue-600 focus:ring-blue-500 disabled:opacity-70"
                               />
@@ -230,7 +256,8 @@ export default function PastResponsesPage({ params }: { params: { id: string } }
                       {q.type === 'Short Text' && (
                         <input 
                           type="text" 
-                          defaultValue={q.answer}
+                          value={answers[q.id] || ''}
+                          onChange={(e) => handleAnswerChange(q.id, e.target.value)}
                           disabled={userRole !== 'Editor'}
                           className="w-full p-3 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl text-[14px] text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-70 disabled:cursor-not-allowed disabled:bg-slate-100 dark:disabled:bg-slate-800"
                         />
@@ -274,13 +301,29 @@ export default function PastResponsesPage({ params }: { params: { id: string } }
       {/* RIGHT FLOATING PANEL — Strip */}
       {showForm && (
         <div className="fixed right-3 md:right-6 top-4 bottom-20 md:top-8 md:bottom-8 hidden md:flex flex-col items-end gap-3 pointer-events-none z-50">
+          
+          {/* Search box — always visible on desktop, properly aligned */}
+          <div className="pointer-events-auto w-52 shadow-lg rounded-xl overflow-hidden bg-white/90 backdrop-blur-md dark:bg-slate-800/90 border border-slate-200/60 dark:border-slate-700/60">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <input 
+                type="text" 
+                placeholder="Search questions..." 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full bg-transparent pl-9 pr-4 py-2.5 text-sm font-medium focus:outline-none text-slate-700 dark:text-slate-200"
+              />
+            </div>
+          </div>
+
           {/* Floating Strip (Timeline) */}
           <div className="pointer-events-auto flex-1 w-2.5 md:w-3 rounded-full flex flex-col overflow-hidden shadow-md border border-slate-200/50 dark:border-slate-700/50 bg-white dark:bg-slate-800">
-            {MOCK_PAST_RESPONSES.map((q) => (
+            {filteredQuestions.map((q) => (
               <div 
                 key={q.id}
                 title={q.title}
-                className="flex-1 w-full transition-colors duration-500 bg-green-500"
+                className={`flex-1 w-full transition-colors duration-500 cursor-pointer hover:brightness-110 ${isAnswered(q.id) ? 'bg-green-500' : 'bg-red-400'}`}
+                onClick={() => document.getElementById(`question-${q.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' })}
               ></div>
             ))}
           </div>
