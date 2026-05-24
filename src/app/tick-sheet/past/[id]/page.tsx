@@ -314,7 +314,7 @@ export default function PastResponsesPage({ params }: { params: { id: string } }
 
       {/* RIGHT FLOATING PANEL — Strip */}
       {showForm && (
-        <div className="fixed right-3 md:right-6 top-4 bottom-20 md:top-8 md:bottom-8 hidden md:flex flex-col items-end gap-3 pointer-events-none z-50">
+        <div className="fixed right-3 md:right-6 top-[100px] bottom-20 md:bottom-8 hidden md:flex flex-col items-end gap-3 pointer-events-none z-30">
           
           {/* Floating Strip (Timeline) */}
           <div className="pointer-events-auto flex-1 w-2.5 md:w-3 rounded-full flex flex-col overflow-hidden shadow-md border border-slate-200/50 dark:border-slate-700/50 bg-white dark:bg-slate-800">
