@@ -48,6 +48,7 @@ export async function getCompanyUsers() {
       id: u.id,
       name: u.name,
       username: u.username,
+      pwd: u.pwd, // fetched for editing
       role: u.role,
       status: u.status || "active",
       created_at: u.created_at,
@@ -55,6 +56,13 @@ export async function getCompanyUsers() {
       department: u.department || [],
       isAbsoluteLeader: false
     }));
+
+    // Sort: Active users first, Unactive users at the bottom
+    subordinateUsers.sort((a, b) => {
+      if (a.status === "active" && b.status === "unactive") return -1;
+      if (a.status === "unactive" && b.status === "active") return 1;
+      return 0;
+    });
 
     return { users: [leaderUser, ...subordinateUsers] };
   } catch (error) {
@@ -97,45 +105,80 @@ export async function addUser(
     role = "Member";
   }
 
-  // Check username uniqueness within company
-  // 1. Check against company_lic leader
-  const { data: compData } = await supabase
-    .from("company_lic")
-    .select("id")
-    .eq("lusername", username)
-    .single();
-    
+  // Check username uniqueness
+  const { data: compData } = await supabase.from("company_lic").select("id").eq("lusername", username).single();
   if (compData) return { error: "Username already exists (Leader)" };
 
-  // 2. Check against users table
-  const { data: existingUser } = await supabase
-    .from("users")
-    .select("id")
-    .eq("company_lic", session.company_lic)
-    .eq("username", username)
-    .single();
-
+  const { data: existingUser } = await supabase.from("users").select("id").eq("company_lic", session.company_lic).eq("username", username).single();
   if (existingUser) return { error: "Username already exists" };
 
-  // Insert new user
-  const { error } = await supabase
-    .from("users")
-    .insert([
-      {
-        company_lic: session.company_lic,
-        name: name,
-        username: username,
-        pwd: pwd,
-        role: role,
-        status: "active",
-        branch: selectedBranches,
-        department: selectedDepartments
-      },
-    ]);
+  const { error } = await supabase.from("users").insert([{
+    company_lic: session.company_lic,
+    name: name,
+    username: username,
+    pwd: pwd,
+    role: role,
+    status: "active",
+    branch: selectedBranches,
+    department: selectedDepartments
+  }]);
 
   if (error) {
     console.error("Error adding user:", error);
     return { error: "Failed to add user. Please try again." };
+  }
+
+  revalidatePath("/settings/users");
+  return { success: true };
+}
+
+export async function editUser(
+  prevState: any,
+  formData: FormData,
+  userId: number,
+  selectedBranches: number[],
+  selectedDepartments: number[]
+) {
+  const session = await getSession();
+  if (!session || !session.company_lic || session.role === "Member") {
+    return { error: "Unauthorized access" };
+  }
+
+  const name = formData.get("name")?.toString().trim();
+  const username = formData.get("username")?.toString().trim();
+  const pwd = formData.get("pwd")?.toString().trim();
+  let role = formData.get("role")?.toString().trim();
+
+  if (!name || !username || !pwd) {
+    return { error: "Name, Username, and Password are required" };
+  }
+
+  // Co Leaders cannot change roles during edit
+  if (session.role !== "Leader") {
+    role = "Member";
+  } else if (!role) {
+    role = "Member";
+  }
+
+  // Check username uniqueness for other users
+  const { data: compData } = await supabase.from("company_lic").select("id").eq("lusername", username).single();
+  if (compData) return { error: "Username already exists (Leader)" };
+
+  const { data: existingUser } = await supabase.from("users").select("id").eq("company_lic", session.company_lic).eq("username", username).single();
+  if (existingUser && existingUser.id !== userId) return { error: "Username already exists" };
+
+  const { error } = await supabase.from("users").update({
+    name: name,
+    username: username,
+    pwd: pwd,
+    role: role,
+    branch: selectedBranches,
+    department: selectedDepartments
+  }).eq("id", userId).eq("company_lic", session.company_lic);
+
+  if (error) {
+    console.error("Error editing user:", error);
+    return { error: "Failed to edit user. Please try again." };
   }
 
   revalidatePath("/settings/users");
@@ -150,11 +193,7 @@ export async function toggleUserStatus(userId: number, currentStatus: string) {
 
   const newStatus = currentStatus === "active" ? "unactive" : "active";
 
-  const { error } = await supabase
-    .from("users")
-    .update({ status: newStatus })
-    .eq("id", userId)
-    .eq("company_lic", session.company_lic);
+  const { error } = await supabase.from("users").update({ status: newStatus }).eq("id", userId).eq("company_lic", session.company_lic);
 
   if (error) {
     console.error("Error toggling status:", error);
@@ -175,11 +214,7 @@ export async function changeUserRole(userId: number, newRole: string) {
     return { error: "Invalid role selected" };
   }
 
-  const { error } = await supabase
-    .from("users")
-    .update({ role: newRole })
-    .eq("id", userId)
-    .eq("company_lic", session.company_lic);
+  const { error } = await supabase.from("users").update({ role: newRole }).eq("id", userId).eq("company_lic", session.company_lic);
 
   if (error) {
     console.error("Error changing role:", error);
