@@ -277,7 +277,11 @@ export default function TickSheetFillPage() {
                   
                   {/* Right Side Date */}
                   {q.endDate && (
-                    <div className="flex items-center gap-1.5 text-slate-400 dark:text-slate-500 font-semibold text-[11px] bg-slate-50/80 dark:bg-slate-800/50 px-2.5 py-1.5 rounded-lg border border-slate-100 dark:border-slate-700/50">
+                    <div className={`flex items-center gap-1.5 font-semibold text-[11px] px-2.5 py-1.5 rounded-lg border ${
+                      q.endDate.toLowerCase() === 'today' || q.endDate.toLowerCase() === 'tomorrow'
+                        ? 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border-red-100 dark:border-red-800/50'
+                        : 'bg-slate-50/80 dark:bg-slate-800/50 text-slate-400 dark:text-slate-500 border-slate-100 dark:border-slate-700/50'
+                    }`}>
                       <Calendar className="w-3.5 h-3.5" />
                       {q.endDate}
                     </div>
