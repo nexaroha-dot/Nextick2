@@ -12,7 +12,8 @@ const mockQuestions = [
     type: 'Short Text', 
     title: 'Machine ID Number', 
     description: 'Enter the unique ID of the machine located on the front metallic panel. It usually starts with "MAC-".', 
-    maxMarks: null 
+    maxMarks: null,
+    endDate: '24 May 2026'
   },
   { 
     id: 'q2', 
@@ -20,14 +21,16 @@ const mockQuestions = [
     title: 'Operational Status', 
     description: 'Select the current status of the machine. If stopped, please log an issue in the next step.', 
     options: ['Running', 'Stopped', 'Maintenance Required'], 
-    maxMarks: 10 
+    maxMarks: 10,
+    endDate: '24 May 2026'
   },
   { 
     id: 'q3', 
     type: 'Number', 
     title: 'Temperature Reading', 
     description: 'Enter the temperature reading from the main digital gauge in Celsius.', 
-    maxMarks: 5 
+    maxMarks: 5,
+    endDate: '25 May 2026'
   },
   { 
     id: 'q4', 
@@ -35,14 +38,16 @@ const mockQuestions = [
     title: 'Safety Checks Passed', 
     description: 'Physically inspect and check all the safety systems that passed the morning check.', 
     options: ['Guards in place', 'Emergency stop working', 'No leaks detected'], 
-    maxMarks: 15 
+    maxMarks: 15,
+    endDate: '25 May 2026'
   },
   { 
     id: 'q5', 
     type: 'Long Text', 
     title: 'Additional Notes', 
     description: 'Provide any additional context or notes regarding this checklist execution.', 
-    maxMarks: null 
+    maxMarks: null,
+    endDate: '26 May 2026'
   },
 ];
 
@@ -157,9 +162,18 @@ export default function TickSheetFillPage() {
                 <div className="flex items-start gap-2.5 mb-4">
                   {/* Number + Title */}
                   <span className="text-slate-400 font-bold text-sm mt-0.5 shrink-0">{index + 1}.</span>
-                  <h3 className="text-base md:text-lg font-bold text-slate-800 dark:text-slate-100 leading-tight flex-1 min-w-0">
-                    {q.title}
-                  </h3>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-base md:text-lg font-bold text-slate-800 dark:text-slate-100 leading-tight">
+                      {q.title}
+                    </h3>
+                  </div>
+
+                  {/* End Date Badge */}
+                  {q.endDate && (
+                    <div className="shrink-0 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 px-2.5 py-1 rounded-md text-[10px] font-bold border border-red-100 dark:border-red-800/50 uppercase tracking-widest">
+                      Ends {q.endDate}
+                    </div>
+                  )}
 
                   {/* Points badge — only when enabled */}
                   {showPointsInQuestionnaire && q.maxMarks && (
