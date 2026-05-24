@@ -153,10 +153,10 @@ export default function TickSheetFillPage() {
               <div 
                 key={q.id} 
                 id={`question-${q.id}`}
-                className="bg-white/95 backdrop-blur-xl dark:bg-slate-800/95 border border-slate-200 dark:border-slate-700/50 rounded-2xl p-4 md:p-6 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)] dark:shadow-[0_2px_12px_-4px_rgba(0,0,0,0.2)] transition-all duration-500 relative"
+                className="bg-white/95 backdrop-blur-xl dark:bg-slate-800/95 border border-slate-200 dark:border-slate-700/50 rounded-2xl p-4 md:p-6 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)] dark:shadow-[0_2px_12px_-4px_rgba(0,0,0,0.2)] transition-all duration-500 relative overflow-hidden"
               >
-                {/* Green left border indicator if answered */}
-                <div className={`absolute left-0 top-0 bottom-0 w-1.5 rounded-l-2xl transition-colors duration-300 ${isAnswered(q.id) ? 'bg-green-500' : 'bg-transparent'}`}></div>
+                {/* Green/Red left border indicator */}
+                <div className={`absolute left-0 top-0 bottom-0 w-1.5 md:w-2 transition-colors duration-300 ${isAnswered(q.id) ? 'bg-green-500' : 'bg-red-400'}`}></div>
 
                 {/* Question Header Row */}
                 <div className="flex items-start gap-2.5 mb-4">
