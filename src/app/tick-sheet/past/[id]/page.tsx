@@ -281,9 +281,7 @@ export default function PastResponsesPage({ params }: { params: { id: string } }
                 </div>
 
                 {/* Footer Section: End Date */}
-                <div className="mt-5 pl-0 md:pl-6 flex items-center justify-end">
-                  {/* Right Side Date */}
-                <div className="mt-4 pl-6 md:pl-8 flex justify-end">
+                <div className="mt-4 pl-0 md:pl-6 flex justify-end">
                   <div className="flex items-center gap-1.5 font-semibold text-[11px] px-2.5 py-1 rounded-lg border bg-slate-50/80 dark:bg-slate-800/50 text-slate-400 dark:text-slate-500 border-slate-100 dark:border-slate-700/50">
                     <Calendar className="w-3 h-3" />
                     {selectedDate || 'Past Date'}
