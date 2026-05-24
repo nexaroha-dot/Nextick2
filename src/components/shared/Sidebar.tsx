@@ -132,18 +132,32 @@ export default function Sidebar({ session }: { session?: any }) {
           </nav>
         </div>
 
-        {/* Minimal Footer with Logout */}
-        <div className="shrink-0 p-6 border-t border-slate-200/50 dark:border-slate-800/50">
-          <button 
-            onClick={handleLogout}
-            className="flex items-center gap-2 text-red-600 dark:text-red-500 hover:text-red-700 dark:hover:text-red-400 font-semibold text-sm transition-colors w-full"
-          >
-            <LogOut className="w-5 h-5" />
-            Logout
-          </button>
-          
-          <div className="mt-6 text-[11px] text-slate-400 dark:text-slate-500 text-center font-medium">
-            v1.0.0 © 2026 CHA Nexus
+        {/* User Profile & Logout */}
+        <div className="shrink-0 p-4 border-t border-slate-200/50 dark:border-slate-800/50">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3 overflow-hidden">
+              <div className="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0">
+                <span className="text-sm font-bold text-slate-600 dark:text-slate-300 uppercase">
+                  {session?.username?.charAt(0) || "U"}
+                </span>
+              </div>
+              <div className="overflow-hidden">
+                <p className="text-sm font-bold text-slate-900 dark:text-slate-100 truncate">
+                  {session?.username || "User"}
+                </p>
+                <p className="text-[11px] font-medium text-slate-500 dark:text-slate-400 truncate">
+                  {session?.role || "Member"}
+                </p>
+              </div>
+            </div>
+            
+            <button 
+              onClick={handleLogout}
+              className="p-2 text-slate-400 hover:text-red-600 dark:hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors shrink-0"
+              title="Logout"
+            >
+              <LogOut className="w-5 h-5" />
+            </button>
           </div>
         </div>
       </div>
