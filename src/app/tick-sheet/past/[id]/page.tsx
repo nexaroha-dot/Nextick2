@@ -94,28 +94,29 @@ export default function PastResponsesPage({ params }: { params: { id: string } }
     <div className="flex-1 flex flex-col h-full bg-slate-50/50 dark:bg-slate-900/50 font-sans overflow-y-auto">
       {/* Header */}
       <header className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 sticky top-0 z-40">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Link 
-              href="/tick-sheet?tab=past" 
-              className="p-2 -ml-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 transition-colors"
-            >
-              <ArrowLeft className="w-5 h-5" />
-            </Link>
-            <div>
-              <h1 className="text-xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
-                <FileText className="w-5 h-5 text-indigo-500" />
-                Past Ticksheet Responses
-              </h1>
-              <p className="text-[13px] text-slate-500 font-medium">Form ID: {params.id}</p>
-            </div>
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center gap-3">
+          <Link 
+            href="/tick-sheet?tab=past" 
+            className="p-2 -ml-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 transition-colors shrink-0"
+          >
+            <ArrowLeft className="w-5 h-5" />
+          </Link>
+          <div className="flex-1 min-w-0">
+            <h1 className="text-base md:text-xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2 truncate">
+              <FileText className="w-4 h-4 text-indigo-500 shrink-0" />
+              Past Ticksheet Responses
+            </h1>
+            <p className="text-[11px] md:text-[13px] text-slate-500 font-medium">Form ID: {params.id}</p>
           </div>
           
           {/* User Role Indicator */}
-          <div className="flex items-center gap-2 bg-indigo-50 dark:bg-indigo-900/30 px-4 py-1.5 rounded-full border border-indigo-100 dark:border-indigo-800/50">
-            <div className="w-2 h-2 rounded-full bg-indigo-500"></div>
-            <span className="text-[13px] font-semibold text-indigo-700 dark:text-indigo-300">
+          <div className="flex items-center gap-1.5 bg-indigo-50 dark:bg-indigo-900/30 px-2.5 md:px-4 py-1.5 rounded-full border border-indigo-100 dark:border-indigo-800/50 shrink-0">
+            <div className="w-1.5 h-1.5 rounded-full bg-indigo-500"></div>
+            <span className="text-[11px] md:text-[13px] font-semibold text-indigo-700 dark:text-indigo-300 hidden sm:inline">
               Your Access: {userRole}
+            </span>
+            <span className="text-[11px] font-semibold text-indigo-700 dark:text-indigo-300 sm:hidden">
+              {userRole}
             </span>
           </div>
         </div>
@@ -309,12 +310,11 @@ export default function PastResponsesPage({ params }: { params: { id: string } }
         )}
       </main>
 
-      {/* RIGHT FLOATING PANEL — Strip */}
+      {/* RIGHT FLOATING STRIP — visible on all screen sizes */}
       {showForm && (
-        <div className="fixed right-3 md:right-6 top-[100px] bottom-20 md:bottom-8 hidden md:flex flex-col items-end gap-3 pointer-events-none z-30">
-          
+        <div className="fixed right-2 md:right-6 top-[72px] bottom-20 md:bottom-8 flex flex-col items-end pointer-events-none z-30">
           {/* Floating Strip (Timeline) */}
-          <div className="pointer-events-auto flex-1 w-2.5 md:w-3 rounded-full flex flex-col overflow-hidden shadow-md border border-slate-200/50 dark:border-slate-700/50 bg-white dark:bg-slate-800">
+          <div className="pointer-events-auto w-2 md:w-3 h-full rounded-full flex flex-col overflow-hidden shadow-md border border-slate-200/50 dark:border-slate-700/50 bg-white dark:bg-slate-800">
             {filteredQuestions.map((q) => (
               <div 
                 key={q.id}
