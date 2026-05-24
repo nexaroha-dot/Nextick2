@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { ArrowLeft, Info, Search, CheckCircle2, Circle, X, CheckSquare, ChevronDown, Award } from 'lucide-react';
+import { ArrowLeft, Info, Search, CheckCircle2, Circle, X, CheckSquare, ChevronDown, Award, Calendar } from 'lucide-react';
 import Link from 'next/link';
 
 // Mock Questions for the fill interface
@@ -13,7 +13,7 @@ const mockQuestions = [
     title: 'Machine ID Number', 
     description: 'Enter the unique ID of the machine located on the front metallic panel. It usually starts with "MAC-".', 
     maxMarks: null,
-    endDate: '24 May 2026'
+    endDate: 'Today'
   },
   { 
     id: 'q2', 
@@ -22,7 +22,7 @@ const mockQuestions = [
     description: 'Select the current status of the machine. If stopped, please log an issue in the next step.', 
     options: ['Running', 'Stopped', 'Maintenance Required'], 
     maxMarks: 10,
-    endDate: '24 May 2026'
+    endDate: 'Tomorrow'
   },
   { 
     id: 'q3', 
@@ -30,7 +30,7 @@ const mockQuestions = [
     title: 'Temperature Reading', 
     description: 'Enter the temperature reading from the main digital gauge in Celsius.', 
     maxMarks: 5,
-    endDate: '25 May 2026'
+    endDate: '28 May'
   },
   { 
     id: 'q4', 
@@ -39,7 +39,7 @@ const mockQuestions = [
     description: 'Physically inspect and check all the safety systems that passed the morning check.', 
     options: ['Guards in place', 'Emergency stop working', 'No leaks detected'], 
     maxMarks: 15,
-    endDate: '25 May 2026'
+    endDate: '01 Jun'
   },
   { 
     id: 'q5', 
@@ -47,7 +47,7 @@ const mockQuestions = [
     title: 'Additional Notes', 
     description: 'Provide any additional context or notes regarding this checklist execution.', 
     maxMarks: null,
-    endDate: '26 May 2026'
+    endDate: '05 Jun'
   },
 ];
 
@@ -168,13 +168,6 @@ export default function TickSheetFillPage() {
                     </h3>
                   </div>
 
-                  {/* End Date Badge */}
-                  {q.endDate && (
-                    <div className="shrink-0 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 px-2.5 py-1 rounded-md text-[10px] font-bold border border-red-100 dark:border-red-800/50 uppercase tracking-widest">
-                      Ends {q.endDate}
-                    </div>
-                  )}
-
                   {/* Points badge — only when enabled */}
                   {showPointsInQuestionnaire && q.maxMarks && (
                     <div className="shrink-0 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 px-2.5 py-1 rounded-full text-xs font-bold whitespace-nowrap border border-blue-100 dark:border-blue-800/50">
@@ -269,15 +262,27 @@ export default function TickSheetFillPage() {
                   )}
                 </div>
 
-                {/* Earned Points Display */}
-                {showPointsInTicksheet && q.maxMarks && isAnswered(q.id) && (
-                  <div className="mt-5 pl-0 md:pl-6 animate-in slide-in-from-top-2 fade-in duration-300">
-                    <div className="inline-flex items-center gap-2 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-400 px-3 py-2 rounded-lg text-xs font-bold">
-                      <Award className="w-4 h-4" />
-                      You earned {q.maxMarks} points
-                    </div>
+                {/* Footer Section: Earned Points & End Date */}
+                <div className="mt-5 pl-0 md:pl-6 flex items-center justify-between">
+                  <div>
+                    {showPointsInTicksheet && q.maxMarks && isAnswered(q.id) && (
+                      <div className="animate-in slide-in-from-top-2 fade-in duration-300">
+                        <div className="inline-flex items-center gap-2 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-400 px-3 py-2 rounded-lg text-xs font-bold">
+                          <Award className="w-4 h-4" />
+                          You earned {q.maxMarks} points
+                        </div>
+                      </div>
+                    )}
                   </div>
-                )}
+                  
+                  {/* Right Side Date */}
+                  {q.endDate && (
+                    <div className="flex items-center gap-1.5 text-slate-400 dark:text-slate-500 font-semibold text-[11px] bg-slate-50/80 dark:bg-slate-800/50 px-2.5 py-1.5 rounded-lg border border-slate-100 dark:border-slate-700/50">
+                      <Calendar className="w-3.5 h-3.5" />
+                      {q.endDate}
+                    </div>
+                  )}
+                </div>
 
               </div>
             ))
