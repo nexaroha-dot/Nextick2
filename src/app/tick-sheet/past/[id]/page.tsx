@@ -209,31 +209,31 @@ export default function PastResponsesPage({ params }: { params: { id: string } }
 
             {/* Render Mock Questions */}
             {filteredQuestions.map((q, index) => (
-              <div key={q.id} id={`question-${q.id}`} className="bg-white/95 backdrop-blur-xl dark:bg-slate-800/95 border border-slate-200 dark:border-slate-700/50 rounded-2xl p-4 md:p-6 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)] dark:shadow-[0_2px_12px_-4px_rgba(0,0,0,0.2)] transition-all duration-500 relative">
+              <div key={q.id} id={`question-${q.id}`} className="bg-white/95 backdrop-blur-xl dark:bg-slate-800/95 border border-slate-200 dark:border-slate-700/50 rounded-2xl p-4 md:p-6 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)] dark:shadow-[0_2px_12px_-4px_rgba(0,0,0,0.2)] transition-all duration-500 relative overflow-hidden">
                 
-                {/* Green left border indicator for answered past questions */}
-                <div className={`absolute left-0 top-0 bottom-0 w-1.5 rounded-l-2xl transition-colors duration-300 ${isAnswered(q.id) ? 'bg-green-500' : 'bg-red-400'}`}></div>
+                {/* Green/Red left border indicator for answered past questions */}
+                <div className={`absolute left-0 top-0 bottom-0 w-1.5 md:w-2 transition-colors duration-300 ${isAnswered(q.id) ? 'bg-green-500' : 'bg-red-400'}`}></div>
                 
-                <div className="flex items-start gap-4">
-                  {/* Question Number Badge */}
-                  <div className="bg-slate-100 dark:bg-slate-700/50 text-slate-500 dark:text-slate-400 font-bold w-8 h-8 rounded-lg flex items-center justify-center shrink-0 mt-0.5 text-sm ml-1.5 md:ml-0">
-                    {index + 1}
+                {/* Question Header Row */}
+                <div className="flex items-start gap-2.5 mb-4">
+                  {/* Number + Title */}
+                  <span className="text-slate-400 font-bold text-sm mt-0.5 shrink-0 ml-1.5 md:ml-0">{index + 1}.</span>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-base md:text-lg font-bold text-slate-800 dark:text-slate-100 leading-tight">
+                      {q.title}
+                    </h3>
                   </div>
-                  
-                  <div className="flex-1 space-y-4">
-                    <div className="flex justify-between items-start">
-                      <h3 className="text-[16px] font-semibold text-slate-800 dark:text-slate-100 leading-snug">
-                        {q.title}
-                      </h3>
-                      {q.points > 0 && (
-                        <div className="bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-bold text-[12px] px-2.5 py-1 rounded-md ml-4 shrink-0 border border-blue-100 dark:border-blue-800/50">
-                          {q.points} pts
-                        </div>
-                      )}
-                    </div>
 
-                    {/* Input Field based on user role */}
-                    <div className="pt-2">
+                  {q.points > 0 && (
+                    <div className="shrink-0 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 px-2.5 py-1 rounded-full text-xs font-bold whitespace-nowrap border border-blue-100 dark:border-blue-800/50">
+                      {q.points} pts
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex-1 space-y-4 pl-0 md:pl-6">
+                  {/* Input Field based on user role */}
+                  <div className="pt-2">
                       {q.type === 'Dropdown' && (
                         <select 
                           className="w-full p-3 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl text-[14px] text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-70 disabled:cursor-not-allowed disabled:bg-slate-100 dark:disabled:bg-slate-800"
@@ -283,12 +283,12 @@ export default function PastResponsesPage({ params }: { params: { id: string } }
                 {/* Footer Section: End Date */}
                 <div className="mt-5 pl-0 md:pl-6 flex items-center justify-end">
                   {/* Right Side Date */}
-                  <div className="flex items-center gap-1.5 font-semibold text-[11px] px-2.5 py-1.5 rounded-lg border bg-slate-50/80 dark:bg-slate-800/50 text-slate-400 dark:text-slate-500 border-slate-100 dark:border-slate-700/50">
-                    <Calendar className="w-3.5 h-3.5" />
+                <div className="mt-4 pl-6 md:pl-8 flex justify-end">
+                  <div className="flex items-center gap-1.5 font-semibold text-[11px] px-2.5 py-1 rounded-lg border bg-slate-50/80 dark:bg-slate-800/50 text-slate-400 dark:text-slate-500 border-slate-100 dark:border-slate-700/50">
+                    <Calendar className="w-3 h-3" />
                     {selectedDate || 'Past Date'}
                   </div>
                 </div>
-
               </div>
             ))}
 
