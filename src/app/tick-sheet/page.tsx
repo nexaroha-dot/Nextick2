@@ -3,9 +3,12 @@
 import React, { useState } from 'react';
 import { CheckSquare, FileText, Clock } from 'lucide-react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 
 export default function TickSheetModulePage() {
-  const [activeTab, setActiveTab] = useState('today');
+  const searchParams = useSearchParams();
+  const initialTab = searchParams.get('tab') || 'today';
+  const [activeTab, setActiveTab] = useState(initialTab);
 
   // Mock data representing ticksheets available to fill (Today's) and unique forms (Past)
   const ticksheets = [
