@@ -19,19 +19,22 @@ export const metadata: Metadata = {
 };
 
 import ClientLayoutWrapper from "@/components/shared/ClientLayoutWrapper";
+import { getSession } from "@/services/auth/session";
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await getSession();
+
   return (
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} antialiased h-full`}
     >
       <body className="flex h-screen overflow-hidden bg-gradient-to-br from-slate-50 to-blue-50/50 dark:from-slate-950 dark:to-blue-950/20 text-slate-900 dark:text-slate-50">
-        <ClientLayoutWrapper>
+        <ClientLayoutWrapper session={session}>
           {children}
         </ClientLayoutWrapper>
       </body>

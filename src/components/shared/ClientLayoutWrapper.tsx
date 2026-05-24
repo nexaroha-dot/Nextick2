@@ -3,7 +3,13 @@ import React from 'react';
 import { usePathname } from 'next/navigation';
 import Sidebar from '@/components/shared/Sidebar';
 
-export default function ClientLayoutWrapper({ children }: { children: React.ReactNode }) {
+export default function ClientLayoutWrapper({ 
+  children, 
+  session 
+}: { 
+  children: React.ReactNode, 
+  session: any 
+}) {
   const pathname = usePathname();
   const isAuthPage = pathname === '/login' || pathname === '/signup';
 
@@ -17,7 +23,7 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
 
   return (
     <>
-      <Sidebar />
+      <Sidebar session={session} />
       <main className="flex-1 overflow-y-auto pb-16 md:pb-0 relative">
         {children}
       </main>

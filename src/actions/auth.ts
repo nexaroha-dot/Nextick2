@@ -1,7 +1,7 @@
 "use server";
 
 import { supabase } from "@/services/supabase/client";
-import { createSession } from "@/services/auth/session";
+import { createSession, destroySession } from "@/services/auth/session";
 
 export async function loginUser(prevState: any, formData: FormData) {
   const licenseNo = formData.get("licenseNo") as string;
@@ -67,4 +67,8 @@ export async function loginUser(prevState: any, formData: FormData) {
     console.error("Login error:", error);
     return { error: "An unexpected error occurred during login. Please try again later." };
   }
+}
+
+export async function logoutUser() {
+  await destroySession();
 }
