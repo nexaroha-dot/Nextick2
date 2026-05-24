@@ -43,6 +43,7 @@ export default function Sidebar({ session }: { session?: any }) {
 
   const handleLogout = async () => {
     await logoutUser();
+    window.location.href = "/login";
   };
 
   return (
