@@ -522,8 +522,8 @@ function QuestionnaireBuilder() {
               <details className="group">
                 <summary className="flex items-center gap-2 p-3 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors list-none">
                   <span className="w-1.5 h-1.5 rounded-full bg-red-400 inline-block shrink-0"></span>
-                  <span className="text-[11px] font-bold text-slate-700 dark:text-slate-300 flex-1 truncate">Daily Exceptions</span>
-                  <span className="text-[9px] font-bold text-slate-400 group-open:hidden shrink-0">{scheduleExceptions.length} skip days</span>
+                  <span className="text-[11px] font-bold text-slate-700 dark:text-slate-300 flex-1 min-w-0 truncate">Daily Exceptions</span>
+                  <span className="ml-auto text-[9px] font-bold text-slate-400 group-open:hidden shrink-0 whitespace-nowrap">{scheduleExceptions.length} skip days</span>
                   <ChevronDown className="w-3.5 h-3.5 text-slate-400 ml-1 group-open:-rotate-180 transition-transform shrink-0" />
                 </summary>
                 <div className="px-3 pb-3 pt-0">
@@ -549,8 +549,8 @@ function QuestionnaireBuilder() {
               <details className="group">
                 <summary className="flex items-center gap-2 p-3 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors list-none">
                   <span className="w-1.5 h-1.5 rounded-full bg-blue-400 inline-block shrink-0"></span>
-                  <span className="text-[11px] font-bold text-slate-700 dark:text-slate-300 flex-1 truncate">Weekly Occurrences</span>
-                  <span className="text-[9px] font-bold text-slate-400 group-open:hidden shrink-0">{scheduleOccurrences.length} days active</span>
+                  <span className="text-[11px] font-bold text-slate-700 dark:text-slate-300 flex-1 min-w-0 truncate">Weekly Occurrences</span>
+                  <span className="ml-auto text-[9px] font-bold text-slate-400 group-open:hidden shrink-0 whitespace-nowrap">{scheduleOccurrences.length} days active</span>
                   <ChevronDown className="w-3.5 h-3.5 text-slate-400 ml-1 group-open:-rotate-180 transition-transform shrink-0" />
                 </summary>
                 <div className="px-3 pb-3 pt-0">
@@ -576,8 +576,8 @@ function QuestionnaireBuilder() {
               <details className="group">
                 <summary className="flex items-center gap-2 p-3 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors list-none">
                   <span className="w-1.5 h-1.5 rounded-full bg-purple-400 inline-block shrink-0"></span>
-                  <span className="text-[11px] font-bold text-slate-700 dark:text-slate-300 flex-1 truncate">Monthly Rule</span>
-                  <span className="text-[9px] font-bold text-slate-400 group-open:hidden shrink-0">{scheduleMonthlyType}</span>
+                  <span className="text-[11px] font-bold text-slate-700 dark:text-slate-300 flex-1 min-w-0 truncate">Monthly Rule</span>
+                  <span className="ml-auto text-[9px] font-bold text-slate-400 group-open:hidden shrink-0 whitespace-nowrap">{scheduleMonthlyType}</span>
                   <ChevronDown className="w-3.5 h-3.5 text-slate-400 ml-1 group-open:-rotate-180 transition-transform shrink-0" />
                 </summary>
                 <div className="px-3 pb-3 pt-0 space-y-2">
@@ -741,8 +741,8 @@ function QuestionnaireBuilder() {
                    <details className="group">
                      <summary className="flex items-center gap-2 p-3 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors list-none">
                        <span className="w-1.5 h-1.5 rounded-full bg-red-400 inline-block shrink-0"></span>
-                       <span className="text-[11px] font-bold text-slate-700 dark:text-slate-300 flex-1 truncate">Daily Exceptions</span>
-                       <span className="ml-auto text-[9px] font-bold text-slate-400 group-open:hidden shrink-0">{scheduleExceptions.length} skip days</span>
+                       <span className="text-[11px] font-bold text-slate-700 dark:text-slate-300 flex-1 min-w-0 truncate">Daily Exceptions</span>
+                       <span className="ml-auto text-[9px] font-bold text-slate-400 group-open:hidden shrink-0 whitespace-nowrap">{scheduleExceptions.length} skip days</span>
                        <ChevronDown className="w-3.5 h-3.5 text-slate-400 ml-1 group-open:-rotate-180 transition-transform shrink-0" />
                      </summary>
                      <div className="px-3 pb-3 pt-0">
@@ -760,8 +760,8 @@ function QuestionnaireBuilder() {
                    <details className="group">
                      <summary className="flex items-center gap-2 p-3 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors list-none">
                        <span className="w-1.5 h-1.5 rounded-full bg-blue-400 inline-block shrink-0"></span>
-                       <span className="text-[11px] font-bold text-slate-700 dark:text-slate-300 flex-1 truncate">Weekly Occurrences</span>
-                       <span className="ml-auto text-[9px] font-bold text-slate-400 group-open:hidden shrink-0">{scheduleOccurrences.length} days active</span>
+                       <span className="text-[11px] font-bold text-slate-700 dark:text-slate-300 flex-1 min-w-0 truncate">Weekly Occurrences</span>
+                       <span className="ml-auto text-[9px] font-bold text-slate-400 group-open:hidden shrink-0 whitespace-nowrap">{scheduleOccurrences.length} days active</span>
                        <ChevronDown className="w-3.5 h-3.5 text-slate-400 ml-1 group-open:-rotate-180 transition-transform shrink-0" />
                      </summary>
                      <div className="px-3 pb-3 pt-0">
@@ -779,8 +779,8 @@ function QuestionnaireBuilder() {
                    <details className="group">
                      <summary className="flex items-center gap-2 p-3 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors list-none">
                        <span className="w-1.5 h-1.5 rounded-full bg-purple-400 inline-block shrink-0"></span>
-                       <span className="text-[11px] font-bold text-slate-700 dark:text-slate-300 flex-1 truncate">Monthly Rule</span>
-                       <span className="ml-auto text-[9px] font-bold text-slate-400 group-open:hidden shrink-0">{scheduleMonthlyType}</span>
+                       <span className="text-[11px] font-bold text-slate-700 dark:text-slate-300 flex-1 min-w-0 truncate">Monthly Rule</span>
+                       <span className="ml-auto text-[9px] font-bold text-slate-400 group-open:hidden shrink-0 whitespace-nowrap">{scheduleMonthlyType}</span>
                        <ChevronDown className="w-3.5 h-3.5 text-slate-400 ml-1 group-open:-rotate-180 transition-transform shrink-0" />
                      </summary>
                      <div className="px-3 pb-3 pt-0 space-y-2">
