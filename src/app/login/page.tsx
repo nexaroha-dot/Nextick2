@@ -11,12 +11,10 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const formAction = async (formData: FormData) => {
     setIsLoading(true);
     setErrorMsg("");
 
-    const formData = new FormData(e.currentTarget);
     const result = await loginUser(null, formData);
 
     if (result?.error) {
@@ -55,7 +53,7 @@ export default function LoginPage() {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form action={formAction} className="space-y-5">
             {/* License Number */}
             <div className="space-y-1.5">
               <label className="text-[13px] font-bold text-slate-700 dark:text-slate-300 ml-1">License No</label>
