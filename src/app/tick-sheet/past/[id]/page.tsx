@@ -312,18 +312,15 @@ export default function PastResponsesPage({ params }: { params: { id: string } }
 
       {/* RIGHT FLOATING STRIP — visible on all screen sizes */}
       {showForm && (
-        <div className="fixed right-2 md:right-6 top-[72px] bottom-20 md:bottom-8 flex flex-col items-end pointer-events-none z-30">
-          {/* Floating Strip (Timeline) */}
-          <div className="pointer-events-auto w-2 md:w-3 flex-1 rounded-full flex flex-col overflow-hidden shadow-md border border-slate-200/50 dark:border-slate-700/50 bg-white dark:bg-slate-800">
-            {filteredQuestions.map((q) => (
-              <div 
-                key={q.id}
-                title={q.title}
-                className={`flex-1 w-full transition-colors duration-500 cursor-pointer hover:brightness-110 ${isAnswered(q.id) ? 'bg-green-500' : 'bg-red-400'}`}
-                onClick={() => document.getElementById(`question-${q.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' })}
-              ></div>
-            ))}
-          </div>
+        <div className="fixed right-1 md:right-6 top-[100px] md:top-[100px] bottom-[100px] md:bottom-12 w-2 md:w-3 pointer-events-auto rounded-full flex flex-col overflow-hidden shadow-md border border-slate-200/50 dark:border-slate-700/50 bg-white dark:bg-slate-800 z-50">
+          {filteredQuestions.map((q) => (
+            <div 
+              key={q.id}
+              title={q.title}
+              className={`flex-1 w-full transition-colors duration-500 cursor-pointer hover:brightness-110 ${isAnswered(q.id) ? 'bg-green-500' : 'bg-red-400'}`}
+              onClick={() => document.getElementById(`question-${q.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' })}
+            ></div>
+          ))}
         </div>
       )}
 

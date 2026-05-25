@@ -294,37 +294,33 @@ export default function TickSheetFillPage() {
         </div>
       </div>
 
-      {/* RIGHT FLOATING STRIP — visible on all screen sizes */}
-      <div className="fixed right-2 md:right-6 top-[72px] md:top-8 bottom-20 md:bottom-8 flex flex-col items-end gap-3 pointer-events-none z-50">
-        
-        {/* Search box — hidden on mobile to save space, visible on desktop */}
-        <div className="pointer-events-auto w-52 shadow-lg rounded-xl overflow-hidden bg-white/90 backdrop-blur-md dark:bg-slate-800/90 border border-slate-200/60 dark:border-slate-700/60 hidden md:block">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-            <input 
-              type="text" 
-              placeholder="Search questions..." 
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-transparent pl-9 pr-4 py-2.5 text-sm font-medium focus:outline-none text-slate-700 dark:text-slate-200"
-            />
-          </div>
+      {/* Search box — hidden on mobile to save space, visible on desktop */}
+      <div className="fixed right-6 top-8 hidden md:block pointer-events-auto w-52 shadow-lg rounded-xl overflow-hidden bg-white/90 backdrop-blur-md dark:bg-slate-800/90 border border-slate-200/60 dark:border-slate-700/60 z-50">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+          <input 
+            type="text" 
+            placeholder="Search questions..." 
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full bg-transparent pl-9 pr-4 py-2.5 text-sm font-medium focus:outline-none text-slate-700 dark:text-slate-200"
+          />
         </div>
+      </div>
 
-        {/* Floating Strip (Timeline) */}
-        <div className="pointer-events-auto w-2 md:w-3 flex-1 rounded-full flex flex-col overflow-hidden shadow-md border border-slate-200/50 dark:border-slate-700/50 bg-white dark:bg-slate-800">
-          {filteredQuestions.map((q) => {
-            const answered = isAnswered(q.id);
-            return (
-              <div 
-                key={q.id}
-                title={q.title}
-                onClick={() => scrollToQuestion(q.id)}
-                className={`flex-1 w-full transition-colors duration-500 cursor-pointer hover:brightness-110 ${answered ? 'bg-green-500' : 'bg-red-400'}`}
-              ></div>
-            );
-          })}
-        </div>
+      {/* Floating Strip (Timeline) - Pure fixed positioning, no flex wrappers */}
+      <div className="fixed right-1 md:right-6 top-[100px] md:top-[100px] bottom-[100px] md:bottom-12 w-2 md:w-3 pointer-events-auto rounded-full flex flex-col overflow-hidden shadow-md border border-slate-200/50 dark:border-slate-700/50 bg-white dark:bg-slate-800 z-50">
+        {filteredQuestions.map((q) => {
+          const answered = isAnswered(q.id);
+          return (
+            <div 
+              key={q.id}
+              title={q.title}
+              onClick={() => scrollToQuestion(q.id)}
+              className={`flex-1 w-full transition-colors duration-500 cursor-pointer hover:brightness-110 ${answered ? 'bg-green-500' : 'bg-red-400'}`}
+            ></div>
+          );
+        })}
       </div>
 
       {/* MODAL: Description Pop-up */}
