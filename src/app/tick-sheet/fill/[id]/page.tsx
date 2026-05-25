@@ -294,11 +294,11 @@ export default function TickSheetFillPage() {
         </div>
       </div>
 
-      {/* RIGHT FLOATING PANEL — Search box + Strip */}
-      <div className="fixed right-3 md:right-6 top-4 bottom-20 md:top-8 md:bottom-8 hidden md:flex flex-col items-end gap-3 pointer-events-none z-50">
+      {/* RIGHT FLOATING STRIP — visible on all screen sizes */}
+      <div className="fixed right-2 md:right-6 top-[72px] md:top-8 bottom-20 md:bottom-8 flex flex-col items-end gap-3 pointer-events-none z-50">
         
-        {/* Search box — always visible on desktop, properly aligned */}
-        <div className="pointer-events-auto w-52 shadow-lg rounded-xl overflow-hidden bg-white/90 backdrop-blur-md dark:bg-slate-800/90 border border-slate-200/60 dark:border-slate-700/60">
+        {/* Search box — hidden on mobile to save space, visible on desktop */}
+        <div className="pointer-events-auto w-52 shadow-lg rounded-xl overflow-hidden bg-white/90 backdrop-blur-md dark:bg-slate-800/90 border border-slate-200/60 dark:border-slate-700/60 hidden md:block">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
             <input 
@@ -312,7 +312,7 @@ export default function TickSheetFillPage() {
         </div>
 
         {/* Floating Strip (Timeline) */}
-        <div className="pointer-events-auto flex-1 w-2.5 md:w-3 rounded-full flex flex-col overflow-hidden shadow-md border border-slate-200/50 dark:border-slate-700/50 bg-white dark:bg-slate-800">
+        <div className="pointer-events-auto w-2 md:w-3 h-full rounded-full flex flex-col overflow-hidden shadow-md border border-slate-200/50 dark:border-slate-700/50 bg-white dark:bg-slate-800">
           {filteredQuestions.map((q) => {
             const answered = isAnswered(q.id);
             return (
