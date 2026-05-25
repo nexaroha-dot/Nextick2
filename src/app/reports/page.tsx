@@ -90,13 +90,6 @@ export default function ReportsIndexPage() {
                 </p>
               </div>
               
-              <div className="flex items-center gap-2 pt-4 border-t border-slate-100 dark:border-slate-700/50 flex-wrap">
-                {report.tags.map(tag => (
-                  <span key={tag} className="px-2.5 py-1 bg-slate-100 dark:bg-slate-800/50 text-slate-600 dark:text-slate-400 rounded-md text-[11px] font-bold tracking-wide">
-                    {tag}
-                  </span>
-                ))}
-              </div>
             </div>
           </Link>
         ))}
