@@ -314,7 +314,7 @@ export default function PastResponsesPage({ params }: { params: { id: string } }
       {showForm && (
         <div className="fixed right-2 md:right-6 top-[72px] bottom-20 md:bottom-8 flex flex-col items-end pointer-events-none z-30">
           {/* Floating Strip (Timeline) */}
-          <div className="pointer-events-auto w-2 md:w-3 h-full rounded-full flex flex-col overflow-hidden shadow-md border border-slate-200/50 dark:border-slate-700/50 bg-white dark:bg-slate-800">
+          <div className="pointer-events-auto w-2 md:w-3 flex-1 rounded-full flex flex-col overflow-hidden shadow-md border border-slate-200/50 dark:border-slate-700/50 bg-white dark:bg-slate-800">
             {filteredQuestions.map((q) => (
               <div 
                 key={q.id}

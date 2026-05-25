@@ -312,7 +312,7 @@ export default function TickSheetFillPage() {
         </div>
 
         {/* Floating Strip (Timeline) */}
-        <div className="pointer-events-auto w-2 md:w-3 h-full rounded-full flex flex-col overflow-hidden shadow-md border border-slate-200/50 dark:border-slate-700/50 bg-white dark:bg-slate-800">
+        <div className="pointer-events-auto w-2 md:w-3 flex-1 rounded-full flex flex-col overflow-hidden shadow-md border border-slate-200/50 dark:border-slate-700/50 bg-white dark:bg-slate-800">
           {filteredQuestions.map((q) => {
             const answered = isAnswered(q.id);
             return (
