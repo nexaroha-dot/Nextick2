@@ -20,6 +20,8 @@ export const metadata: Metadata = {
 
 import ClientLayoutWrapper from "@/components/shared/ClientLayoutWrapper";
 import { getSession } from "@/services/auth/session";
+import { getSubscriptionStatus } from "@/actions/subscription";
+import PlanBanner from "@/components/shared/PlanBanner";
 
 export default async function RootLayout({
   children,
@@ -27,16 +29,24 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = await getSession();
+  let subStatus = null;
+  
+  if (session) {
+    subStatus = await getSubscriptionStatus();
+  }
 
   return (
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} antialiased h-full`}
     >
-      <body className="flex h-screen overflow-hidden bg-gradient-to-br from-slate-50 to-blue-50/50 dark:from-slate-950 dark:to-blue-950/20 text-slate-900 dark:text-slate-50">
-        <ClientLayoutWrapper session={session}>
-          {children}
-        </ClientLayoutWrapper>
+      <body className="flex flex-col h-screen overflow-hidden bg-gradient-to-br from-slate-50 to-blue-50/50 dark:from-slate-950 dark:to-blue-950/20 text-slate-900 dark:text-slate-50">
+        {subStatus && <PlanBanner status={subStatus} />}
+        <div className="flex flex-1 overflow-hidden">
+          <ClientLayoutWrapper session={session}>
+            {children}
+          </ClientLayoutWrapper>
+        </div>
       </body>
     </html>
   );
