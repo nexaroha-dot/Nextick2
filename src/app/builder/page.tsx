@@ -443,13 +443,61 @@ function QuestionnaireBuilder() {
   const onEdgesChange = useCallback((changes: any) => setEdges(eds => applyEdgeChanges(changes, eds)), []);
   const onConnect = useCallback((params: any) => setEdges(eds => addEdge(params, eds)), []);
 
+  useEffect(() => {
+    if (editId) {
+      loadTemplate(editId);
+    }
+  }, [editId]);
+
+  const loadTemplate = async (id: string) => {
+    const { getTemplateById } = await import('@/actions/builder');
+    const res = await getTemplateById('ticksheet', id);
+    if (res.success && res.data) {
+      setQuestionnaireTitle(res.data.title);
+      setNodes(res.data.schema || []);
+      
+      const sch = res.data.schedule;
+      if (sch) {
+        if (sch.exceptions) setScheduleExceptions(sch.exceptions);
+        if (sch.occurrences) setScheduleOccurrences(sch.occurrences);
+        if (sch.monthlyType) setScheduleMonthlyType(sch.monthlyType);
+        if (sch.monthlyDates) setScheduleMonthlyDates(sch.monthlyDates);
+        if (sch.monthlyIntervals) setScheduleMonthlyIntervals(sch.monthlyIntervals);
+      }
+    } else {
+      alert("Failed to load template.");
+    }
+  };
+
   const handleSaveQuestionnaire = async () => {
     setIsSaving(true);
-    // Simulating save for frontend only
-    setTimeout(() => {
+    const payload = {
+      title: questionnaireTitle,
+      status: 'Published',
+      schema: nodes,
+      schedule: {
+        type: 'Custom',
+        exceptions: scheduleExceptions,
+        occurrences: scheduleOccurrences,
+        monthlyType: scheduleMonthlyType,
+        monthlyDates: scheduleMonthlyDates,
+        monthlyIntervals: scheduleMonthlyIntervals
+      }
+    };
+    
+    const { saveTemplate } = await import('@/actions/builder');
+    const res = await saveTemplate('ticksheet', editId, payload);
+    setIsSaving(false);
+    
+    if (res.success) {
       alert('Questionnaire saved successfully!');
-      setIsSaving(false);
-    }, 800);
+      if (!editId && res.id) {
+        // If it was new, we could update the URL, but an alert is fine for now
+        window.history.replaceState(null, '', `?id=${res.id}`);
+      }
+    } else {
+      alert('Failed to save: ' + res.error);
+    }
   };
 
   const onDragStart = (event: any, nodeType: string, label: string) => {
