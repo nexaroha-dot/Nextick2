@@ -68,9 +68,9 @@ export default function ShareAccessModal({
     setDepartments(Array.isArray(dRes) ? dRes : []);
     setBranches(Array.isArray(bRes) ? bRes : []);
     
-    // getCompanyUsers returns { success: boolean, data: any[] }
-    if (uRes && uRes.success) {
-      setUsers(uRes.data || []);
+    // getCompanyUsers returns { users: any[] } | { error: string }
+    if (uRes && 'users' in uRes && Array.isArray(uRes.users)) {
+      setUsers(uRes.users);
     }
     
     setIsLoading(false);
@@ -113,7 +113,7 @@ export default function ShareAccessModal({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Share Access" maxWidth="max-w-2xl">
+    <Modal isOpen={isOpen} onClose={onClose} title="Share Access">
       <div className="flex flex-col gap-6">
         
         {/* Access Type Toggle */}
