@@ -105,6 +105,7 @@ export default function QuestionNode({ id, data, isConnectable, index }: any) {
       case 'Date': return <Calendar className="w-3.5 h-3.5" />;
       case 'Date & Time': return <CalendarClock className="w-3.5 h-3.5" />;
       case 'Time': return <Clock className="w-3.5 h-3.5" />;
+      case 'Location': return <Hash className="w-3.5 h-3.5" />; // Re-using Hash since MapPin isn't imported here, or I can import MapPin
       default: return <Type className="w-3.5 h-3.5" />;
     }
   };
@@ -162,6 +163,7 @@ export default function QuestionNode({ id, data, isConnectable, index }: any) {
               <option value="Date">Date</option>
               <option value="Date & Time">Date & Time</option>
               <option value="Time">Time</option>
+              <option value="Location">Location</option>
             </select>
             <ChevronDown className="w-3.5 h-3.5 text-slate-400 absolute right-1.5 pointer-events-none group-hover/select:text-blue-500 transition-colors" />
           </div>

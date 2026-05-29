@@ -1,62 +1,31 @@
 "use client";
 
-import React, { useState } from 'react';
-import { CheckSquare, FileText, Clock } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { CheckSquare, FileText, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
+import { getAssignedTemplates } from '@/actions/fill';
 
 export default function TickSheetModulePage() {
   const searchParams = useSearchParams();
   const initialTab = searchParams.get('tab') || 'today';
   const [activeTab, setActiveTab] = useState(initialTab);
+  
+  const [templates, setTemplates] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // Mock data representing ticksheets available to fill (Today's) and unique forms (Past)
-  const ticksheets = [
-    {
-      _id: 't1',
-      title: 'Daily Machine Checklist',
-      status: 'today',
-      date: 'Active',
-      endDate: 'Ends Today, 11:59 PM'
-    },
-    {
-      _id: 't2',
-      title: 'Site Safety Audit',
-      status: 'today',
-      date: 'Active',
-      endDate: 'Ends Today, 06:00 PM'
-    },
-    {
-      _id: 't3',
-      title: 'End of Shift Compliance',
-      status: 'today',
-      date: 'Active',
-      endDate: 'Ends Today, 10:00 PM'
-    },
-    {
-      _id: 'p1',
-      title: 'Weekly Maintenance Log',
-      status: 'past',
-      date: '21/05/2026',
-      endDate: 'Ended 21/05/2026'
-    },
-    {
-      _id: 'p2',
-      title: 'Inventory Verification',
-      status: 'past',
-      date: '20/05/2026',
-      endDate: 'Ended 20/05/2026'
-    },
-    {
-      _id: 'p3',
-      title: 'Incident Report Form',
-      status: 'past',
-      date: '18/05/2026',
-      endDate: 'Ended 18/05/2026'
+  useEffect(() => {
+    async function fetchTemplates() {
+      setLoading(true);
+      const res = await getAssignedTemplates('ticksheet');
+      setTemplates(res);
+      setLoading(false);
     }
-  ];
+    fetchTemplates();
+  }, []);
 
-  const filteredSheets = ticksheets.filter(t => t.status === activeTab);
+  // For MVP, we'll just show all active templates in "today" tab, since we haven't built complex scheduling filters yet.
+  const filteredSheets = templates; // We can add schedule logic later
 
   return (
     <div className="flex-1 flex flex-col h-full overflow-y-auto bg-transparent p-4 md:p-8 font-sans">
@@ -75,33 +44,31 @@ export default function TickSheetModulePage() {
           onClick={() => setActiveTab('today')}
           className={`px-5 py-2.5 rounded-t-lg text-[14px] font-bold transition-all relative ${activeTab === 'today' ? 'text-blue-600' : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200'}`}
         >
-          Today's
+          Assigned to Me
           {activeTab === 'today' && <div className="absolute bottom-[-9px] left-0 w-full h-0.5 bg-blue-600 rounded-t-md"></div>}
-        </button>
-        <button 
-          onClick={() => setActiveTab('past')}
-          className={`px-5 py-2.5 rounded-t-lg text-[14px] font-bold transition-all relative ${activeTab === 'past' ? 'text-blue-600' : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200'}`}
-        >
-          Past
-          {activeTab === 'past' && <div className="absolute bottom-[-9px] left-0 w-full h-0.5 bg-blue-600 rounded-t-md"></div>}
         </button>
       </div>
 
       {/* Ticksheet Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100 fill-mode-both">
-        {filteredSheets.length === 0 ? (
+        {loading ? (
+          <div className="col-span-full flex flex-col items-center justify-center py-20 text-slate-400">
+            <Loader2 className="w-8 h-8 animate-spin mb-4 text-blue-500" />
+            <p>Loading your ticksheets...</p>
+          </div>
+        ) : filteredSheets.length === 0 ? (
           <div className="col-span-full text-center glass-panel border border-slate-200 dark:border-slate-700/50 rounded-2xl py-16 px-6 shadow-sm">
             <div className="w-16 h-16 bg-blue-50 dark:bg-blue-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
               <CheckSquare className="w-8 h-8 text-blue-600 dark:text-blue-400" />
             </div>
-            <h3 className="text-slate-800 dark:text-slate-200 font-bold text-lg mb-1">No {activeTab} ticksheets</h3>
+            <h3 className="text-slate-800 dark:text-slate-200 font-bold text-lg mb-1">No assigned ticksheets</h3>
             <p className="text-slate-500 text-[13px]">You're all caught up for now!</p>
           </div>
         ) : (
           filteredSheets.map(sheet => (
             <Link 
-              key={sheet._id} 
-              href={sheet.status === 'past' ? `/tick-sheet/past/${sheet._id}` : `/tick-sheet/fill/${sheet._id}`}
+              key={sheet.id} 
+              href={`/tick-sheet/fill/${sheet.id}`}
               className="block group"
             >  
               <div className="glass-panel border border-slate-200/50 dark:border-slate-700/50 rounded-2xl p-6 hover:border-blue-500/50 hover:shadow-xl transition-all duration-300 group flex flex-col relative cursor-pointer overflow-hidden bg-white/60 dark:bg-slate-900/60 shadow-sm h-full">
@@ -111,6 +78,9 @@ export default function TickSheetModulePage() {
                   <div className="bg-blue-50 dark:bg-blue-900/30 p-3 rounded-xl group-hover:scale-110 transition-transform">
                     <FileText className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                   </div>
+                  {sheet.access_type === 'public' && (
+                    <span className="text-[10px] font-bold bg-green-100 text-green-700 px-2 py-1 rounded-md uppercase">Public</span>
+                  )}
                 </div>
                 
                 <div className="flex-1">
@@ -123,8 +93,8 @@ export default function TickSheetModulePage() {
                   <span className="px-3 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-full text-[10px] font-extrabold uppercase tracking-widest">
                     Ticksheet
                   </span>
-                  <span className="text-xs font-semibold text-slate-400">
-                    {sheet.date}
+                  <span className="text-[10px] font-semibold text-slate-400">
+                    {new Date(sheet.created_at).toLocaleDateString()}
                   </span>
                 </div>
               </div>
