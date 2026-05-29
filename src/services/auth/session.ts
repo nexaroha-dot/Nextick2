@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 type SessionData = {
   id: number;
   company_lic: number | null;
-  role: "Leader" | "Member";
+  role: "Leader" | "Co Leader" | "Member";
   username: string;
 };
 
