@@ -63,9 +63,16 @@ export default function ShareAccessModal({
       getBranches(),
       getCompanyUsers()
     ]);
-    if (dRes.success) setDepartments(dRes.data);
-    if (bRes.success) setBranches(bRes.data);
-    if (uRes.success) setUsers(uRes.data);
+    
+    // getDepartments and getBranches return an array directly
+    setDepartments(Array.isArray(dRes) ? dRes : []);
+    setBranches(Array.isArray(bRes) ? bRes : []);
+    
+    // getCompanyUsers returns { success: boolean, data: any[] }
+    if (uRes && uRes.success) {
+      setUsers(uRes.data || []);
+    }
+    
     setIsLoading(false);
   };
 
