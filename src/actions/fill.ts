@@ -51,18 +51,34 @@ export async function getAssignedTemplates(type: "ticksheet" | "form") {
     // Public or Admin can see everything active
     if (ctx.isAdmin || t.access_type === "public") return true;
 
-    const access = t.access_list || { departments: [], branches: [], users: [] };
+    let access = { departments: [], branches: [], users: [] };
+    if (t.access_list) {
+      if (typeof t.access_list === 'string') {
+        try { access = JSON.parse(t.access_list); } catch (e) {}
+      } else {
+        access = t.access_list;
+      }
+    }
     
+    // Coerce everything to strings for bulletproof matching
+    const myUid = String(ctx.session.id);
+    const myDepts = ctx.depts.map(String);
+    const myBranches = ctx.branches.map(String);
+
     // Check direct user assignment
-    if (access.users?.includes(ctx.session.id)) return true;
+    if (access.users && Array.isArray(access.users)) {
+      if (access.users.some(uId => String(uId) === myUid)) return true;
+    }
 
     // Check department assignment
-    const hasDept = access.departments?.some((dId: number) => ctx.depts.includes(dId));
-    if (hasDept) return true;
+    if (access.departments && Array.isArray(access.departments)) {
+      if (access.departments.some(dId => myDepts.includes(String(dId)))) return true;
+    }
 
     // Check branch assignment
-    const hasBranch = access.branches?.some((bId: number) => ctx.branches.includes(bId));
-    if (hasBranch) return true;
+    if (access.branches && Array.isArray(access.branches)) {
+      if (access.branches.some(bId => myBranches.includes(String(bId)))) return true;
+    }
 
     return false;
   });
